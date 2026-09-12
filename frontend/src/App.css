@@ -1,0 +1,7 @@
+/* BDV TravelOS - Global Styles */
+
+/* Remove CRA defaults */
+.App {
+  height: 100vh;
+  overflow: hidden;
+}

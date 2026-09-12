@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Environment files (never commit real secrets)
+.env
+.env.*
+!.env.example
+!frontend/.env.example
+!backend/.env.example
+
+# Frontend build output
+frontend/build/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+venv/
+.venv/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Deployment tooling
+.vercel
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
