@@ -355,11 +355,15 @@ async def pin_login(request: PinLoginRequest, response: Response):
     })
 
     # Set httpOnly cookie — inaccessible to JavaScript, resistant to XSS token theft
+    # samesite="none" + secure=True is required because the frontend (Vercel) and
+    # backend (Railway) are on different domains — a cross-site "lax" cookie would
+    # never be sent back on API calls, appearing as an immediate logout after login.
     response.set_cookie(
         key="bdvv_token",
         value=token,
         httponly=True,
-        samesite="lax",
+        samesite="none",
+        secure=True,
         max_age=ACCESS_TOKEN_EXPIRE_HOURS * 3600,
         path="/",
     )
@@ -382,7 +386,7 @@ async def pin_login(request: PinLoginRequest, response: Response):
 @api_router.post("/auth/logout")
 async def logout(response: Response):
     """Clear the httpOnly auth cookie."""
-    response.delete_cookie(key="bdvv_token", path="/")
+    response.delete_cookie(key="bdvv_token", path="/", samesite="none", secure=True)
     return {"success": True}
 
 
