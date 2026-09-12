@@ -253,7 +253,7 @@ export function PlannerMap({ components = [], trip }) {
       >
         {/* Dark CartoDB tiles — matches the app's dark theme */}
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url={`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${process.env.REACT_APP_CARTO_API_KEY}`}
           attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
           maxZoom={19}
         />
