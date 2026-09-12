@@ -2276,7 +2276,94 @@ async def delete_staff(
 
 import json as _json
 import asyncio as _asyncio
-from emergentintegrations.llm.chat import LlmChat, UserMessage, TextDelta, StreamDone
+from anthropic import AsyncAnthropic
+
+
+class UserMessage:
+    def __init__(self, text, file_contents=None):
+        self.text = text
+        self.file_contents = file_contents or []
+
+
+class FileContent:
+    def __init__(self, content_type, file_content_base64):
+        self.content_type = content_type
+        self.file_content_base64 = file_content_base64
+
+
+class TextDelta:
+    def __init__(self, content):
+        self.content = content
+
+
+class StreamDone:
+    pass
+
+
+def _user_message_to_anthropic_content(message: "UserMessage"):
+    content = [
+        {
+            "type": "image",
+            "source": {
+                "type": "base64",
+                "media_type": fc.content_type,
+                "data": fc.file_content_base64,
+            },
+        }
+        for fc in message.file_contents
+    ]
+    content.append({"type": "text", "text": message.text})
+    return content
+
+
+class LlmChat:
+    """Minimal LlmChat-compatible wrapper around the Anthropic SDK.
+
+    Replaces Emergent's `emergentintegrations` package (pulled from PyPI and
+    no longer installable outside the Emergent platform) with a direct call
+    to Anthropic, using this app's own ANTHROPIC-compatible key.
+    """
+
+    def __init__(self, api_key, session_id=None, system_message="", initial_messages=None):
+        self._client = AsyncAnthropic(api_key=api_key)
+        self.system_message = system_message
+        self._model = "claude-sonnet-5"
+        self._history = [
+            {"role": m["role"], "content": m["content"]}
+            for m in (initial_messages or [])
+            if m.get("role") != "system"
+        ]
+
+    def with_model(self, provider, model):
+        # provider is always "anthropic" in this app; kept for call-site compatibility
+        self._model = model
+        return self
+
+    async def stream_message(self, user_message: UserMessage):
+        messages = self._history + [
+            {"role": "user", "content": _user_message_to_anthropic_content(user_message)}
+        ]
+        async with self._client.messages.stream(
+            model=self._model,
+            max_tokens=8192,
+            system=self.system_message,
+            messages=messages,
+        ) as stream:
+            async for text in stream.text_stream:
+                yield TextDelta(text)
+            yield StreamDone()
+
+    async def send_message(self, user_message: UserMessage) -> str:
+        messages = self._history + [
+            {"role": "user", "content": _user_message_to_anthropic_content(user_message)}
+        ]
+        resp = await self._client.messages.create(
+            model=self._model,
+            max_tokens=8192,
+            system=self.system_message,
+            messages=messages,
+        )
+        return "".join(block.text for block in resp.content if block.type == "text")
 
 COMPASS_SYSTEM_PROMPT = """
 ═══════════════════════════════════════════════════════════════
@@ -2906,7 +2993,7 @@ async def compass_chat(body: AiChatRequest, current_user: dict = Depends(get_cur
             session_id=session_id,
             system_message=system_msg,
             initial_messages=initial_messages,
-        ).with_model("anthropic", "claude-sonnet-4-6")
+        ).with_model("anthropic", "claude-sonnet-5")
 
         full_text_parts = []
         try:
@@ -3251,7 +3338,7 @@ async def extract_itinerary_data_from_url(
                 "Always return a single valid JSON object with extracted travel fields. "
                 "Never include markdown, explanation, or anything outside the JSON."
             ),
-        ).with_model("anthropic", "claude-sonnet-4-6")
+        ).with_model("anthropic", "claude-sonnet-5")
 
         result = await chat.send_message(UserMessage(text=prompt))
 
@@ -3359,7 +3446,6 @@ async def ai_generate_itinerary(
     # ── 2. Build the LLM message ───────────────────────────────────────────────
     file_contents = None
     if body.image_b64:
-        from emergentintegrations.llm.chat import FileContent
         file_contents = [FileContent(
             content_type=body.image_mime_type or "image/jpeg",
             file_content_base64=body.image_b64,
@@ -3371,11 +3457,10 @@ async def ai_generate_itinerary(
             api_key=api_key,
             session_id=f"itin_ai_{uuid.uuid4()}",
             system_message=_ITIN_AI_SYSTEM,
-        ).with_model("anthropic", "claude-sonnet-4-5")
+        ).with_model("anthropic", "claude-sonnet-5")
 
-        from emergentintegrations.llm.chat import UserMessage as UMsg
         import asyncio as _aio
-        msg = UMsg(text=full_prompt, file_contents=file_contents)
+        msg = UserMessage(text=full_prompt, file_contents=file_contents)
         try:
             raw = await _aio.wait_for(chat.send_message(msg), timeout=55)
         except _aio.TimeoutError:
