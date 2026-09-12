@@ -7,10 +7,24 @@ const API_BASE = `${BACKEND_URL}/api`;
 const api = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
-  withCredentials: true,   // send httpOnly cookie on every request
+  withCredentials: true,   // still send the httpOnly cookie when the browser allows it
 });
 
-// Response interceptor — handle 401 (session expired or cookie missing)
+// Request interceptor — attach the bearer token.
+// The frontend (Vercel) and backend (Railway) are on different domains, so the
+// httpOnly auth cookie is a third-party cookie — Safari and Chrome/Firefox private
+// browsing block those outright regardless of SameSite settings. The Bearer token
+// (returned in the login response body, backed by the same JWT) is the reliable
+// cross-domain fallback the backend already supports.
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('bdvv_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Response interceptor — handle 401 (session expired or token missing)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -19,6 +33,7 @@ api.interceptors.response.use(
       // because GET /api/auth/me on first load returns 401 for unauthenticated users)
       if (!window.location.pathname.includes('/login')) {
         localStorage.removeItem('bdvv_user');
+        localStorage.removeItem('bdvv_token');
         window.location.href = '/login';
       }
     }

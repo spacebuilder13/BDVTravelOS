@@ -21,11 +21,13 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || '';
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 async function apiFetch(path, opts = {}) {
+  const token = localStorage.getItem('bdvv_token');
   const res = await fetch(`${BACKEND_URL}/api${path}`, {
     ...opts,
-    credentials: 'include',   // send httpOnly cookie automatically
+    credentials: 'include',   // still send the httpOnly cookie when the browser allows it
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(opts.headers || {}),
     },
   });
@@ -435,11 +437,13 @@ export default function AIAssistant() {
     let newSessionId = activeSessionId;
 
     try {
+      const authToken = localStorage.getItem('bdvv_token');
       const response = await fetch(`${BACKEND_URL}/api/ai/chat`, {
         method: 'POST',
-        credentials: 'include',   // send httpOnly cookie automatically
+        credentials: 'include',   // still send the httpOnly cookie when the browser allows it
         headers: {
           'Content-Type': 'application/json',
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
         },
         body: JSON.stringify({ session_id: activeSessionId, message: msg }),
         signal: abortRef.current,

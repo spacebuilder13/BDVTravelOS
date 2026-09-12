@@ -15,23 +15,25 @@ export function AuthProvider({ children }) {
     setBrandState(b);
   }, []);
 
-  // Initialize: verify session via /auth/me (uses httpOnly cookie automatically)
+  // Initialize: verify session via /auth/me (bearer token attached automatically
+  // by the request interceptor in services/api.js, if one is stored)
   // User profile (non-sensitive) is cached in localStorage for instant hydration
   useEffect(() => {
     const savedUser = localStorage.getItem('bdvv_user');
     if (savedUser) {
       try { setUser(JSON.parse(savedUser)); } catch (e) { localStorage.removeItem('bdvv_user'); }
     }
-    // Always verify cookie session is still valid
+    // Always verify the session is still valid
     authAPI.me()
       .then(res => {
         setUser(res.data);
         localStorage.setItem('bdvv_user', JSON.stringify(res.data));
       })
       .catch(() => {
-        // Cookie expired or missing — clear cached user
+        // Token expired or missing — clear cached session
         setUser(null);
         localStorage.removeItem('bdvv_user');
+        localStorage.removeItem('bdvv_token');
       })
       .finally(() => setLoading(false));
 
@@ -43,9 +45,13 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (staffId, pin) => {
     const res = await authAPI.login(staffId, pin);
-    const { user: userData } = res.data;
-    // Token is stored in httpOnly cookie by the server — do NOT store in localStorage
+    const { user: userData, token } = res.data;
+    // The server also sets an httpOnly cookie, but the frontend/backend are on
+    // different domains (Vercel/Railway), so that cookie is third-party and gets
+    // blocked by Safari and Chrome/Firefox private browsing. The bearer token is
+    // the reliable cross-domain session mechanism (see services/api.js).
     localStorage.setItem('bdvv_user', JSON.stringify(userData));
+    localStorage.setItem('bdvv_token', token);
     setUser(userData);
     return userData;
   }, []);
@@ -53,6 +59,7 @@ export function AuthProvider({ children }) {
   const logout = useCallback(async () => {
     try { await authAPI.logout(); } catch (_) { /* ignore — clear client side anyway */ }
     localStorage.removeItem('bdvv_user');
+    localStorage.removeItem('bdvv_token');
     setUser(null);
   }, []);
 

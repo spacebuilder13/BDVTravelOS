@@ -2,11 +2,13 @@
 const BACKEND = process.env.REACT_APP_BACKEND_URL || '';
 
 async function apiFetch(path, opts = {}) {
+  const token = localStorage.getItem('bdvv_token');
   const res = await fetch(`${BACKEND}/api${path}`, {
     ...opts,
-    credentials: 'include',   // send httpOnly cookie automatically (no localStorage token)
+    credentials: 'include',   // still send the httpOnly cookie when the browser allows it
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(opts.headers || {}),
     },
   });
@@ -20,6 +22,7 @@ async function apiFetch(path, opts = {}) {
       // Only redirect if not already on login page to avoid infinite redirect loops
       if (!window.location.pathname.includes('/login')) {
         localStorage.removeItem('bdvv_user');
+        localStorage.removeItem('bdvv_token');
         window.location.href = '/login';
       }
     }
