@@ -1,0 +1,434 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BDV Travel OS Runtime",
+    "output": "architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/spacebuilder13/BDVTravelOS",
+      "provider": "github",
+      "revision": "ee6a523b7458a9d8aa592eb64ac1704294c11799"
+    },
+    "views": [
+      {
+        "id": "request-path",
+        "label": "Primary request path",
+        "focus": [
+          "staff",
+          "spa",
+          "cors",
+          "auth",
+          "handlers",
+          "mongo"
+        ],
+        "note": "An authenticated staff action, from the browser through the JWT gate to MongoDB."
+      },
+      {
+        "id": "ai-and-outbound",
+        "label": "AI and outbound calls",
+        "focus": [
+          "handlers",
+          "llm",
+          "anthropic",
+          "web"
+        ],
+        "note": "The only places the backend reaches out to third parties."
+      },
+      {
+        "id": "files",
+        "label": "File uploads",
+        "focus": [
+          "spa",
+          "handlers",
+          "uploads"
+        ],
+        "note": "Uploads are written behind the JWT gate but served back through a static mount with no auth check."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "staff",
+      "type": "external",
+      "label": "Agency Staff",
+      "sublabel": "PIN login",
+      "pos": [
+        50,
+        300
+      ],
+      "size": [
+        120,
+        64
+      ],
+      "sources": [
+        {
+          "path": "frontend/src/contexts/AuthContext.jsx",
+          "line": 54,
+          "label": "token → localStorage"
+        }
+      ]
+    },
+    {
+      "id": "spa",
+      "type": "frontend",
+      "label": "React SPA",
+      "sublabel": "served by Vercel",
+      "pos": [
+        240,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "axios api.js",
+      "sources": [
+        {
+          "path": "frontend/src/App.js",
+          "line": 47,
+          "label": "routes"
+        },
+        {
+          "path": "frontend/src/services/api.js",
+          "line": 7,
+          "label": "axios client"
+        }
+      ]
+    },
+    {
+      "id": "maps",
+      "type": "external",
+      "label": "Map & FX APIs",
+      "sublabel": "CARTO/OSM, Nominatim, FX",
+      "pos": [
+        240,
+        90
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "frontend/src/components/planner/PlannerMap.jsx",
+          "line": 256
+        },
+        {
+          "path": "frontend/src/components/dashboard/CurrencyConverterWidget.jsx",
+          "line": 56
+        }
+      ]
+    },
+    {
+      "id": "cors",
+      "type": "security",
+      "label": "CORS Middleware",
+      "sublabel": "CORS_ORIGINS allow-list",
+      "pos": [
+        460,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 5719
+        }
+      ]
+    },
+    {
+      "id": "auth",
+      "type": "security",
+      "label": "JWT Auth Guard",
+      "sublabel": "get_current_user",
+      "pos": [
+        640,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "Bearer or cookie",
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 84
+        }
+      ]
+    },
+    {
+      "id": "handlers",
+      "type": "backend",
+      "label": "FastAPI /api Routes",
+      "sublabel": "server.py, uvicorn",
+      "pos": [
+        820,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "CRM · quotes · trips · visa",
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 53,
+          "label": "api_router"
+        }
+      ]
+    },
+    {
+      "id": "llm",
+      "type": "backend",
+      "label": "LlmChat Shim",
+      "sublabel": "anthropic SDK",
+      "pos": [
+        820,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 2323
+        }
+      ]
+    },
+    {
+      "id": "anthropic",
+      "type": "external",
+      "label": "Anthropic API",
+      "sublabel": "claude-sonnet-5",
+      "pos": [
+        1050,
+        110
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "mongo",
+      "type": "database",
+      "label": "MongoDB",
+      "sublabel": "Motor, DB_NAME",
+      "pos": [
+        1050,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 40
+        }
+      ]
+    },
+    {
+      "id": "uploads",
+      "type": "database",
+      "label": "Uploads Volume",
+      "sublabel": "backend/uploads/",
+      "pos": [
+        640,
+        500
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "Railway volume",
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 1643,
+          "label": "write"
+        },
+        {
+          "path": "backend/server.py",
+          "line": 5717,
+          "label": "static mount"
+        }
+      ]
+    },
+    {
+      "id": "web",
+      "type": "external",
+      "label": "Public Web",
+      "sublabel": "Sheets CSV, itinerary URLs",
+      "pos": [
+        1050,
+        500
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 3035,
+          "label": "sheets sync"
+        },
+        {
+          "path": "backend/server.py",
+          "line": 3263,
+          "label": "URL extract"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Staff browser (untrusted)",
+      "wraps": [
+        "staff",
+        "spa"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Railway: backend service",
+      "wraps": [
+        "cors",
+        "auth",
+        "handlers",
+        "llm",
+        "uploads"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "JWT-verified",
+      "wraps": [
+        "handlers",
+        "llm"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Railway: MongoDB",
+      "wraps": [
+        "mongo"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "staff-spa",
+      "from": "staff",
+      "to": "spa",
+      "label": "uses",
+      "variant": "emphasis"
+    },
+    {
+      "id": "spa-cors",
+      "from": "spa",
+      "to": "cors",
+      "label": "HTTPS + JWT",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cors-auth",
+      "from": "cors",
+      "to": "auth",
+      "variant": "emphasis"
+    },
+    {
+      "id": "auth-handlers",
+      "from": "auth",
+      "to": "handlers",
+      "label": "staff",
+      "variant": "emphasis"
+    },
+    {
+      "id": "handlers-mongo",
+      "from": "handlers",
+      "to": "mongo",
+      "label": "Motor",
+      "variant": "emphasis"
+    },
+    {
+      "id": "handlers-llm",
+      "from": "handlers",
+      "to": "llm",
+      "label": "prompt"
+    },
+    {
+      "id": "llm-anthropic",
+      "from": "llm",
+      "to": "anthropic",
+      "label": "LLM_API_KEY"
+    },
+    {
+      "id": "handlers-web",
+      "from": "handlers",
+      "to": "web",
+      "label": "httpx GET",
+      "variant": "dashed"
+    },
+    {
+      "id": "handlers-uploads",
+      "from": "handlers",
+      "to": "uploads",
+      "label": "write file"
+    },
+    {
+      "id": "spa-uploads",
+      "from": "spa",
+      "to": "uploads",
+      "label": "no JWT",
+      "variant": "security"
+    },
+    {
+      "id": "spa-maps",
+      "from": "spa",
+      "to": "maps",
+      "label": "direct fetch",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Primary path",
+      "items": [
+        "PIN login → 24h HS256 JWT, kept in localStorage, sent as Bearer",
+        "get_current_user re-reads the staff doc on every call",
+        "Handlers hit Mongo via Motor; AI routes stream through LlmChat"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Trust boundaries",
+      "items": [
+        "Browser is untrusted; Vercel only serves static files",
+        "One JWT gate; admin checks are inline role comparisons",
+        "/api/uploads is a static mount, readable without a JWT"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Watch-outs",
+      "items": [
+        "JWT_SECRET and CORS_ORIGINS have unsafe code defaults",
+        "URL extract fetches any staff URL server-side (SSRF)",
+        "Uploads need the Railway volume; seed admins use PIN 0000"
+      ]
+    }
+  ]
+}
