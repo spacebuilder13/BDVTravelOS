@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "BDV Travel OS Request Data Flow",
+    "output": "data-flow.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "crud-roundtrip",
+        "label": "Standard request round trip",
+        "focus": [
+          "pages",
+          "guard",
+          "crud",
+          "mongo"
+        ],
+        "note": "A normal screen action: axios JSON in, Motor query, serialized JSON back."
+      },
+      {
+        "id": "compass-stream",
+        "label": "Compass AI streaming chat",
+        "focus": [
+          "compass",
+          "guard",
+          "chat",
+          "mongo",
+          "llm",
+          "anthropic"
+        ],
+        "note": "Context from MongoDB, tokens from Claude, streamed back as SSE and persisted."
+      }
+    ],
+    "viewBox": [
+      1070,
+      610
+    ],
+    "legend": {
+      "entries": {
+        "dashed": {
+          "label": "response to browser"
+        },
+        "emphasis": {
+          "label": "request path"
+        },
+        "default": {
+          "label": "data flow"
+        }
+      }
+    }
+  },
+  "stages": [
+    {
+      "label": "Browser (React SPA)"
+    },
+    {
+      "label": "API edge"
+    },
+    {
+      "label": "Route handlers"
+    },
+    {
+      "label": "MongoDB"
+    },
+    {
+      "label": "Claude integration"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "pages",
+      "type": "frontend",
+      "label": "Screen Pages",
+      "sublabel": "CRM, Quotes, Trips",
+      "stage": 0,
+      "row": 0,
+      "tag": "axios api.js"
+    },
+    {
+      "id": "compass",
+      "type": "frontend",
+      "label": "Compass Chat UI",
+      "sublabel": "AIAssistant.jsx",
+      "stage": 0,
+      "row": 2,
+      "tag": "fetch + SSE"
+    },
+    {
+      "id": "guard",
+      "type": "security",
+      "label": "CORS + JWT Guard",
+      "sublabel": "get_current_user",
+      "stage": 1,
+      "row": 1,
+      "tag": "Bearer or cookie"
+    },
+    {
+      "id": "crud",
+      "type": "backend",
+      "label": "CRUD Handlers",
+      "sublabel": "/api/enquiries, /quotes",
+      "stage": 2,
+      "row": 0,
+      "tag": "server.py"
+    },
+    {
+      "id": "chat",
+      "type": "backend",
+      "label": "compass_chat",
+      "sublabel": "POST /api/ai/chat",
+      "stage": 2,
+      "row": 2,
+      "tag": "StreamingResponse"
+    },
+    {
+      "id": "llm",
+      "type": "backend",
+      "label": "LlmChat Shim",
+      "sublabel": "stream_message",
+      "stage": 4,
+      "row": 2,
+      "tag": "anthropic SDK"
+    },
+    {
+      "id": "mongo",
+      "type": "database",
+      "label": "MongoDB",
+      "sublabel": "Motor async driver",
+      "stage": 3,
+      "row": 1,
+      "tag": "plain dict docs"
+    },
+    {
+      "id": "anthropic",
+      "type": "external",
+      "label": "Anthropic API",
+      "sublabel": "claude-sonnet-5",
+      "stage": 4,
+      "row": 3,
+      "tag": "LLM_API_KEY"
+    }
+  ],
+  "flows": [
+    {
+      "id": "pages-guard",
+      "from": "pages",
+      "to": "guard",
+      "label": "JSON + Bearer",
+      "classification": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "compass-guard",
+      "from": "compass",
+      "to": "guard",
+      "label": "chat message",
+      "classification": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "guard-crud",
+      "from": "guard",
+      "to": "crud",
+      "label": "staff user",
+      "variant": "emphasis"
+    },
+    {
+      "id": "guard-chat",
+      "from": "guard",
+      "to": "chat",
+      "label": "staff user",
+      "variant": "emphasis"
+    },
+    {
+      "id": "crud-mongo",
+      "from": "crud",
+      "to": "mongo",
+      "label": "query → documents",
+      "classification": "Motor",
+      "variant": "emphasis"
+    },
+    {
+      "id": "chat-mongo",
+      "from": "chat",
+      "to": "mongo",
+      "label": "history in, msgs saved",
+      "classification": "ai_chat_*",
+      "variant": "default"
+    },
+    {
+      "id": "chat-llm",
+      "from": "chat",
+      "to": "llm",
+      "label": "prompt → TextDelta",
+      "variant": "emphasis",
+      "route": "straight"
+    },
+    {
+      "id": "llm-anthropic",
+      "from": "llm",
+      "to": "anthropic",
+      "label": "stream → deltas",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "crud-pages",
+      "from": "crud",
+      "to": "pages",
+      "label": "JSON response",
+      "classification": "serialize_doc",
+      "variant": "dashed",
+      "route": "top-channel"
+    },
+    {
+      "id": "chat-compass",
+      "from": "chat",
+      "to": "compass",
+      "label": "SSE delta / done",
+      "classification": "text/event-stream",
+      "variant": "dashed",
+      "route": "bottom-channel"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Standard round trip",
+      "items": [
+        "axios sends Bearer JWT; 401 → /login",
+        "Guard re-reads db.staff every call",
+        "serialize_doc drops _id, ISO dates"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Where Claude sits",
+      "items": [
+        "Behind the JWT guard, in handlers only",
+        "Only chat streams; others await reply",
+        "One LlmChat shim, one LLM_API_KEY"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "What gets persisted",
+      "items": [
+        "User msg saved first, reply after",
+        "ai-generate saves nothing itself",
+        "Stream errors arrive as SSE events"
+      ]
+    }
+  ]
+}
