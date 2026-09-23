@@ -1,0 +1,389 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BDV Travel OS Deployment",
+    "output": "deployment.html",
+    "quality_profile": "showcase",
+    "engineering_profile": "deployment-ownership",
+    "repository": {
+      "url": "https://github.com/spacebuilder13/BDVTravelOS",
+      "provider": "github",
+      "revision": "13b9a009a52f09a622902e357c1abcb2efe27b9e"
+    },
+    "views": [
+      {
+        "id": "request-path",
+        "label": "Staff request path",
+        "focus": [
+          "browser",
+          "vercel",
+          "backend",
+          "mongo"
+        ],
+        "note": "Static bundle from Vercel, then every API call goes cross-origin to Railway."
+      },
+      {
+        "id": "railway-state",
+        "label": "Railway state",
+        "focus": [
+          "backend",
+          "mongo",
+          "volume"
+        ],
+        "note": "All durable state: MongoDB plus the uploads volume mounted on the single backend service."
+      },
+      {
+        "id": "third-parties",
+        "label": "Third parties",
+        "focus": [
+          "browser",
+          "posthog",
+          "emergent",
+          "maps",
+          "backend",
+          "anthropic",
+          "web"
+        ],
+        "note": "Services the browser and backend call directly, outside BDV's two platforms."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "browser",
+      "type": "external",
+      "label": "Staff Browser",
+      "sublabel": "runs the SPA",
+      "pos": [
+        50,
+        280
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "frontend/src/services/api.js",
+          "line": 3,
+          "label": "REACT_APP_BACKEND_URL"
+        }
+      ]
+    },
+    {
+      "id": "vercel",
+      "type": "frontend",
+      "label": "Vercel Static Site",
+      "sublabel": "craco build → build/",
+      "pos": [
+        50,
+        70
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "BDV · Vercel",
+      "sources": [
+        {
+          "path": "frontend/vercel.json",
+          "line": 1
+        }
+      ]
+    },
+    {
+      "id": "backend",
+      "type": "backend",
+      "label": "FastAPI Service",
+      "sublabel": "uvicorn :$PORT, 1 proc",
+      "pos": [
+        420,
+        280
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "BDV · Railway",
+      "sources": [
+        {
+          "path": "backend/Procfile",
+          "line": 1
+        },
+        {
+          "path": "backend/server.py",
+          "line": 5719,
+          "label": "CORS"
+        }
+      ]
+    },
+    {
+      "id": "mongo",
+      "type": "database",
+      "label": "MongoDB",
+      "sublabel": "MONGO_URL / DB_NAME",
+      "pos": [
+        700,
+        200
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "BDV · Railway",
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 39
+        }
+      ]
+    },
+    {
+      "id": "volume",
+      "type": "database",
+      "label": "Uploads Volume",
+      "sublabel": "backend/uploads/",
+      "pos": [
+        700,
+        370
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "BDV · Railway",
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 36
+        }
+      ]
+    },
+    {
+      "id": "anthropic",
+      "type": "external",
+      "label": "Anthropic API",
+      "sublabel": "claude-sonnet-5",
+      "pos": [
+        960,
+        70
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 2323
+        }
+      ]
+    },
+    {
+      "id": "web",
+      "type": "external",
+      "label": "Public Web",
+      "sublabel": "Sheets CSV, URL extract",
+      "pos": [
+        960,
+        510
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "backend/server.py",
+          "line": 3048
+        },
+        {
+          "path": "backend/server.py",
+          "line": 3281
+        }
+      ]
+    },
+    {
+      "id": "maps",
+      "type": "external",
+      "label": "Map & FX APIs",
+      "sublabel": "CARTO, OSM, FX rates",
+      "pos": [
+        235,
+        70
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "frontend/src/components/planner/PlannerMap.jsx",
+          "line": 256
+        }
+      ]
+    },
+    {
+      "id": "posthog",
+      "type": "external",
+      "label": "PostHog",
+      "sublabel": "session recording",
+      "pos": [
+        50,
+        510
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "frontend/public/index.html",
+          "line": 103
+        }
+      ]
+    },
+    {
+      "id": "emergent",
+      "type": "external",
+      "label": "Emergent CDN",
+      "sublabel": "emergent-main.js",
+      "pos": [
+        235,
+        510
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "sources": [
+        {
+          "path": "frontend/public/index.html",
+          "line": 26
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Vercel / production",
+      "wraps": [
+        "vercel"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Railway project / production",
+      "wraps": [
+        "backend",
+        "mongo",
+        "volume"
+      ],
+      "pad": 24
+    },
+    {
+      "kind": "security-group",
+      "label": "Railway-internal state",
+      "wraps": [
+        "mongo",
+        "volume"
+      ],
+      "pad": 12
+    }
+  ],
+  "connections": [
+    {
+      "id": "browser-vercel",
+      "from": "browser",
+      "to": "vercel",
+      "label": "GET bundle",
+      "variant": "emphasis"
+    },
+    {
+      "id": "browser-backend",
+      "from": "browser",
+      "to": "backend",
+      "label": "HTTPS /api + JWT",
+      "variant": "emphasis"
+    },
+    {
+      "id": "backend-mongo",
+      "from": "backend",
+      "to": "mongo",
+      "label": "MONGO_URL",
+      "variant": "emphasis"
+    },
+    {
+      "id": "backend-volume",
+      "from": "backend",
+      "to": "volume",
+      "label": "disk mount"
+    },
+    {
+      "id": "backend-anthropic",
+      "from": "backend",
+      "to": "anthropic",
+      "label": "LLM_API_KEY"
+    },
+    {
+      "id": "backend-web",
+      "from": "backend",
+      "to": "web",
+      "label": "httpx GET",
+      "variant": "dashed"
+    },
+    {
+      "id": "browser-maps",
+      "from": "browser",
+      "to": "maps",
+      "label": "tiles, FX",
+      "variant": "dashed"
+    },
+    {
+      "id": "browser-posthog",
+      "from": "browser",
+      "to": "posthog",
+      "label": "replays",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "browser-emergent",
+      "from": "browser",
+      "to": "emergent",
+      "label": "script",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Build & run",
+      "items": [
+        "Vercel: frontend/, yarn build",
+        "Railway: backend/, Procfile uvicorn",
+        "No CI, Docker or health check"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Environment",
+      "items": [
+        "Vercel: REACT_APP_* (build time)",
+        "Railway: MONGO_URL, DB_NAME",
+        "Railway: JWT_SECRET, CORS, LLM key"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Production gaps",
+      "items": [
+        "PostHog key from Emergent template",
+        "Still loads emergent-main.js",
+        "One env, one process, one volume"
+      ]
+    }
+  ]
+}
