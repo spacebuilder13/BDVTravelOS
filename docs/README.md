@@ -30,6 +30,7 @@ Every claim below is either **confirmed** (pulled directly from this repo's code
 - [Network & Infrastructure](#-network--infrastructure)
 - [How the OS Works](#️-how-the-os-works)
 - [Diagrams](#-diagrams)
+- [Viewing the Diagrams](#-viewing-the-diagrams)
 - [Open Items & Next Steps](#-open-items--next-steps)
 
 ---
@@ -209,6 +210,34 @@ Generated via [Archify](https://github.com/tt-a1i/archify) in Claude Code, run d
 `Architecture (1)` → `Deployment Topology (5)` → `Login→Trip Planner flow (3)` → `Schema (4)` → `API Map (6)` → `Migration Map (9)`
 
 Component Map (8) and the general Data Flow / Inquiry-to-Quotation diagrams (2, 7) are better as reference material — they overlap with #3 and #1.
+
+---
+
+## 👀 Viewing the Diagrams
+
+Each diagram is a single self-contained HTML file — nothing to install, no server to run.
+
+> ⚠️ **GitHub's file viewer shows raw source code, not the rendered diagram.** Clicking a `.html` file on github.com will show you a wall of code, not the picture. Use one of the two options below instead.
+
+**Option A — Open locally (works right now, no setup)**
+
+1. Clone the repo, or pull if you already have it:
+   ```
+   git clone <repo-url>
+   ```
+2. Open the `docs/` folder on your computer (File Explorer / Finder).
+3. Double-click any `.html` file — it opens directly in your default browser as a local page.
+4. Repeat for any other diagram — each file is independent, so there's nothing else to download or configure.
+
+**Option B — Open via Vercel (once the `/docs` deployment is live)**
+
+Once a Vercel project is pointed at this `/docs` folder (tracked in [Open Items](#-open-items--next-steps) below), every diagram gets a real URL:
+
+1. Go to `<vercel-url>/<filename>` — for example `bdv-architecture.vercel.app/architecture.html`.
+2. No cloning or downloading needed — works from any device, browser tab, or shared link.
+3. Worth bookmarking: **Architecture** and **Deployment Topology** are the two most people come back to.
+
+**If a diagram opens blank or looks broken:** the file didn't fully download — each one is ~800 KB. Re-clone or re-download and try again.
 
 ---
 

@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BDVTravelOS — Engineering Overview</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root{
+    --ink:#1A1D23; --muted:#5B6472; --faint:#8B93A0;
+    --navy:#16233F; --amber:#8A5A2B; --amber-strong:#C08A2E;
+    --bg:#FAFAF8; --paper:#FFFFFF; --line:#E7E2D8; --line-soft:#ECE7DC;
+    --callout-bg:#FBF3E4; --callout-border:#E8D3A6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Work Sans',sans-serif;font-size:16px;line-height:1.65}
+  a{color:var(--amber)}
+  a:hover{color:#5E3D1D}
+  .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(250,250,248,0.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .topbar a{font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .topbar .brand{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--navy)}
+  main{max-width:760px;margin:0 auto;padding:56px 24px 96px}
+  .doc-header{text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;padding-bottom:40px;margin-bottom:40px;border-bottom:1px solid var(--line)}
+  .doc-header h1{font-family:'Fraunces',serif;font-size:38px;font-weight:600;color:var(--navy);margin:0;line-height:1.15}
+  .doc-header .tagline{max-width:520px;color:var(--muted);font-size:16px;margin:0}
+  .badges{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px}
+  .badges img{height:20px}
+  .doc-header .byline{color:var(--faint);font-size:13px}
+  h1,h2,h3{font-family:'Fraunces',serif;color:var(--navy);font-weight:600}
+  h2{font-size:26px;margin:52px 0 18px;padding-top:8px}
+  h2:first-of-type{margin-top:0}
+  h3{font-size:19px;margin:28px 0 10px}
+  p{color:var(--ink);margin:14px 0}
+  ul,ol{padding-left:22px;margin:14px 0}
+  li{margin:6px 0}
+  li input[type="checkbox"]{margin-right:8px}
+  strong{color:var(--navy);font-weight:600}
+  code{font-family:'IBM Plex Mono',monospace;font-size:13px;background:#F1ECE0;color:#5A4A2E;padding:2px 6px;border-radius:5px}
+  hr{border:none;border-top:1px solid var(--line);margin:48px 0}
+  table{width:100%;border-collapse:collapse;margin:18px 0 28px;font-size:14px}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{font-weight:600;color:var(--navy);border-bottom:2px solid var(--line)}
+  tr:last-child td{border-bottom:none}
+  blockquote{margin:20px 0;padding:14px 18px;background:var(--callout-bg);border:1px solid var(--callout-border);border-radius:10px;color:#5A4A2E}
+  blockquote p{margin:0;color:inherit;font-size:14px}
+  details{margin:18px 0;padding:16px 18px;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+  summary{cursor:pointer;font-family:'Fraunces',serif;font-size:15px;color:var(--navy)}
+  summary strong{font-weight:600}
+  details[open] summary{margin-bottom:8px}
+  details table{margin:12px 0 0}
+  .doc-footer{text-align:center;margin-top:64px;padding-top:28px;border-top:1px solid var(--line);color:var(--faint);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&larr; Back to diagrams</a>
+  <span class="brand">BDVTravelOS</span>
+</div>
+
+<main>
+  <div class="doc-header">
+    <h1>Engineering Overview</h1>
+    <p class="tagline">Internal operations platform for BDV &middot; migrating from a single-repo Emergent build to a modern GitHub &rarr; Vercel &rarr; Supabase stack</p>
+    <div class="badges">
+      <img src="https://img.shields.io/badge/status-Phase%201%20migration-yellow" alt="Status: Phase 1 migration">
+      <img src="https://img.shields.io/badge/frontend-React%20%2F%20Vercel-blue" alt="Frontend: React / Vercel">
+      <img src="https://img.shields.io/badge/backend-FastAPI%20%2F%20Railway-009688" alt="Backend: FastAPI / Railway">
+      <img src="https://img.shields.io/badge/database-MongoDB%20%E2%86%92%20Supabase-47A248" alt="Database: MongoDB to Supabase">
+      <img src="https://img.shields.io/badge/visibility-private-lightgrey" alt="Visibility: private">
+    </div>
+    <p class="byline">Prepared by Harsh Shah (SNA) &middot; last updated Sep 24, 2026</p>
+  </div>
+
+<hr />
+<p>This file lives in <code>/docs</code> alongside the architecture diagrams it references. It's written for anyone new to the BDVTravelOS migration project — right now, primarily <strong>Jash Doshi</strong> — to get oriented before doing active work.</p>
+<p>Every claim below is either <strong>confirmed</strong> (pulled directly from this repo's code, or a live check of a connected system) or <strong>pending</strong> (not yet decided, or not yet verifiable) — flagged rather than guessed.</p>
+<h2>Contents</h2>
+<ul>
+<li><a href="#at-a-glance">At a Glance</a></li>
+<li><a href="#-current-scope">Current Scope</a></li>
+<li><a href="#-team--roles">Team &amp; Roles</a></li>
+<li><a href="#-access-control">Access Control</a></li>
+<li><a href="#️-database">Database</a></li>
+<li><a href="#-network--infrastructure">Network &amp; Infrastructure</a></li>
+<li><a href="#️-how-the-os-works">How the OS Works</a></li>
+<li><a href="#-diagrams">Diagrams</a></li>
+<li><a href="#-viewing-the-diagrams">Viewing the Diagrams</a></li>
+<li><a href="#-open-items--next-steps">Open Items &amp; Next Steps</a></li>
+</ul>
+<hr />
+<h2>At a Glance</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Frontend</strong></td>
+<td>React (CRA/craco), deployed on Vercel</td>
+</tr>
+<tr>
+<td><strong>Backend</strong></td>
+<td>FastAPI, deployed on Railway</td>
+</tr>
+<tr>
+<td><strong>Database (current)</strong></td>
+<td>MongoDB, via Motor — 35 collections</td>
+</tr>
+<tr>
+<td><strong>Database (target)</strong></td>
+<td>Supabase (Postgres) — not started yet</td>
+</tr>
+<tr>
+<td><strong>Auth</strong></td>
+<td>Staff name + 4-digit PIN → JWT in an httpOnly cookie</td>
+</tr>
+<tr>
+<td><strong>Repo structure (planned)</strong></td>
+<td><code>/demo</code> (untouched original) + <code>/prod</code> (Phase 1 modules, live)</td>
+</tr>
+<tr>
+<td><strong>Phase 1 modules</strong></td>
+<td>Dashboard · CRM (Visa + Docs) · Trip Planner (Inquiry + Quotation)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>🎯 Current Scope</h2>
+<p>BDVTravelOS is being migrated off its original Emergent-built stack onto a new stack: a private GitHub repository, Vercel for deployment, and Supabase for the database.</p>
+<p><strong>Migration approach</strong></p>
+<ol>
+<li>The full Emergent-era repo was copy-pasted as-is into a new private GitHub repo (done).</li>
+<li>That new repo will hold two top-level folders: <code>/demo</code> (the untouched Emergent copy, kept as reference/rollback — not deployed) and <code>/prod</code> (where the real migration work happens, module by module — this is what deploys live on the Vercel link).</li>
+</ol>
+<p><strong>Phase 1 — three modules move into <code>/prod</code>:</strong></p>
+<ul>
+<li>Dashboard</li>
+<li>CRM (Visa module + Docs module)</li>
+<li>Trip Planner (Inquiry + Quotation)</li>
+</ul>
+<p>Everything else in the original app stays in <code>/demo</code> until a later phase.</p>
+<p><strong>Enablement track</strong> (parallel to the migration itself):</p>
+<ul>
+<li>A Claude Code learning guide for Yash Doshi and his team</li>
+<li>Live Co-Claude sessions with Yash Doshi and his team</li>
+</ul>
+<p>These two items are about building the BDV team's own capability to work with Claude Code, alongside the SNA team doing the migration.</p>
+<hr />
+<h2>👥 Team &amp; Roles</h2>
+<table>
+<thead>
+<tr>
+<th>Person</th>
+<th>Side</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Yash Doshi</td>
+<td>BDV</td>
+<td>Administrator</td>
+</tr>
+<tr>
+<td>Isha Doshi</td>
+<td>BDV</td>
+<td>Administrator</td>
+</tr>
+<tr>
+<td>Dolly Doshi</td>
+<td>BDV</td>
+<td>Administrator</td>
+</tr>
+<tr>
+<td>Neel Doshi</td>
+<td>BDV</td>
+<td>Administrator</td>
+</tr>
+<tr>
+<td>Priyanka</td>
+<td>BDV</td>
+<td>Operations</td>
+</tr>
+<tr>
+<td>Utsav Modi</td>
+<td>SNA (Spaceships &amp; Atoms)</td>
+<td>Mentor</td>
+</tr>
+<tr>
+<td>Harsh Shah</td>
+<td>SNA (Spaceships &amp; Atoms)</td>
+<td>Migration lead</td>
+</tr>
+<tr>
+<td>Jash Doshi</td>
+<td>SNA (Spaceships &amp; Atoms)</td>
+<td>Harness Engineer — this doc's intended reader</td>
+</tr>
+</tbody>
+</table>
+<p>SNA is the outside team helping BDV execute this migration; the BDV-side names are the OS's actual business users and administrators.</p>
+<hr />
+<h2>🔐 Access Control</h2>
+<blockquote>
+<p>Confirmed directly from this repo (<code>backend/server.py</code>), not inferred.</p>
+</blockquote>
+<p><strong>Login:</strong> staff pick their name and enter a 4-digit PIN (no email/password) at <code>/api/auth/login</code>. A JWT is issued and stored as an httpOnly cookie (<code>bdvv_token</code>, 24-hour expiry). Accounts are provisioned by an admin — there is no self-signup.</p>
+<p><strong>Protected admins:</strong> <code>PROTECTED_ADMINS = {"yash doshi", "dolly doshi", "isha doshi", "neel doshi"}</code> is hardcoded in <code>server.py</code>. A startup routine (<code>seed_protected_admins</code>) guarantees all four always exist with <code>role: admin</code> and <code>is_protected: true</code>, re-marking them protected on every boot. Protected admins cannot be deleted and cannot have their role changed away from admin — both enforced server-side.</p>
+<details>
+<summary><strong>Seeded staff accounts (from <code>DEFAULT_STAFF</code>)</strong></summary>
+<p><br></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Seed role</th>
+<th>Default PIN</th>
+<th>Protected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Yash Doshi</td>
+<td>admin</td>
+<td>0000</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Dolly Doshi</td>
+<td>admin</td>
+<td>0000</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Isha Doshi</td>
+<td>admin</td>
+<td>0000</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Neel Doshi</td>
+<td>admin</td>
+<td>0000</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Priyanka</td>
+<td>accounts</td>
+<td>3333</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Karan</td>
+<td>sales</td>
+<td>1111</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Khushi</td>
+<td>operations</td>
+<td>2222</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Prushti</td>
+<td>sales</td>
+<td>4444</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>Note: the code seeds Priyanka's role as <code>accounts</code>, not <code>operations</code> — worth confirming with Yash which is current. Karan, Khushi, and Prushti aren't in the core team list above either; they may be other BDV staff outside this migration's direct stakeholders.</p>
+</details>
+<p><strong>Role enforcement is narrow:</strong> of 154 API routes in <code>server.py</code>, only 5 check <code>role == "admin"</code> — create staff, update staff, delete staff, reset a staff member's PIN, and update brand/site settings. Every other route (CRM, Trip Planner, Visa, Quotations, etc.) only requires a valid login; any authenticated staff member can read and write there regardless of role. There is no module-level permission system — e.g. Priyanka's account isn't restricted from Trip Planner, nor is a <code>sales</code> account restricted from Visa/Docs.</p>
+<blockquote>
+<p>⚠️ <strong>Worth flagging:</strong> default PINs ship as literal values in the seed data and should be rotated before this goes live for real use.</p>
+</blockquote>
+<hr />
+<h2>🗄️ Database</h2>
+<blockquote>
+<p>Confirmed directly from this repo.</p>
+</blockquote>
+<p><strong>Engine today:</strong> MongoDB, accessed via Motor (<code>motor.motor_asyncio.AsyncIOMotorClient</code>) — not Postgres/Supabase yet. Connection comes from the <code>MONGO_URL</code> + <code>DB_NAME</code> env vars (<code>backend/.env.example</code> defaults <code>DB_NAME=bdv_travel_os</code>).</p>
+<p><strong>Schema:</strong> no ORM or schema layer — collections are plain dicts, validated only at the Pydantic request-model level in FastAPI, not at the database itself.</p>
+<details>
+<summary><strong>Collections (35 total, one database)</strong></summary>
+<p><br></p>
+<p><code>staff</code> · <code>enquiries</code> · <code>clients</code> · <code>client_documents</code> · <code>quotes</code> · <code>quote_terms_template</code> · <code>trips</code> · <code>trip_components</code> · <code>trip_legs</code> · <code>trip_stops</code> · <code>trip_stays</code> · <code>trip_attractions</code> · <code>trip_restaurants</code> · <code>trip_pins</code> · <code>trip_meeting_points</code> · <code>trip_info_points</code> · <code>itineraries</code> · <code>bookings</code> · <code>transport_bookings</code> · <code>visa_applications</code> · <code>sources</code> · <code>saved_sites</code> · <code>places</code> · <code>destination_db</code> · <code>quick_links</code> · <code>notes</code> · <code>alerts</code> · <code>activity_log</code> · <code>ai_chat_sessions</code> · <code>ai_chat_messages</code> · <code>whatsapp_messages</code> · <code>tax_profiles</code> · <code>brand_settings</code> · <code>counters</code> · <code>file_uploads</code></p>
+</details>
+<p><strong>Target:</strong> Supabase (Postgres) is the stated destination for <code>/prod</code>, but <code>CLAUDE.md</code> in this repo explicitly calls this out as a separate, deliberate follow-up — not started yet. No Supabase project for BDVTravelOS exists in the connected Supabase account either as of this writing.</p>
+<p><strong>File uploads aren't in the database:</strong> they're written to local disk under <code>backend/uploads/</code> and served at <code>/api/uploads/...</code>. This needs a persistent volume on whatever host runs the backend (currently a Railway volume) — worth flagging if <code>/prod</code>'s backend ever moves off Railway, or if uploads should move to object storage (S3/Supabase Storage) as part of the same phase as the Postgres migration.</p>
+<hr />
+<h2>🌐 Network &amp; Infrastructure</h2>
+<blockquote>
+<p>Confirmed directly from this repo, combined with a live check of the connected Vercel project.</p>
+</blockquote>
+<p><strong>Two separate hosts, cross-domain:</strong> frontend on Vercel (root directory <code>frontend/</code>, <code>yarn build</code> → static <code>build/</code> output, all routes rewritten to <code>index.html</code> — a client-side-routed SPA); backend + MongoDB on Railway (root directory <code>backend/</code>, started via <code>Procfile</code>: <code>uvicorn server:app --host 0.0.0.0 --port $PORT</code>).</p>
+<p><strong>Cross-site auth by design:</strong> because Vercel and Railway are different domains, the auth cookie is set with <code>samesite="none"; secure=true</code> — required for it to survive a cross-site request. The backend's <code>CORS_ORIGINS</code> env var is a comma-separated allow-list that must be kept in sync with whatever Vercel URL is currently live; the code's own comment warns that a stale <code>CORS_ORIGINS</code> after a Vercel URL change causes CORS failures on the frontend with no obvious error message.</p>
+<p><strong>No <code>/demo</code> / <code>/prod</code> split in this codebase yet:</strong> as of this writing this repo is still one flat tree (<code>backend/</code>, <code>frontend/</code>), matching <code>CLAUDE.md</code>'s own note: <em>"No demo/prod environment separation yet — there is currently one deployment."</em> The <code>/demo</code> + <code>/prod</code> folder split described in Current Scope is the plan for the next step.</p>
+<p><strong>Live Vercel project (<code>bdv-travel-os</code>):</strong> no custom domain attached, Vercel Authentication (SSO) on for all deployments except custom domains, no framework auto-detected, and the project isn't marked live — consistent with <code>/prod</code> not having this application's code pushed to it yet. Confirmed: <code>/prod</code> stays on the current <code>vercel.app</code> URL, no custom domain planned for go-live.</p>
+<blockquote>
+<p>⚠️ <strong>Worth flagging:</strong> <code>JWT_SECRET</code> has a hardcoded fallback (<code>'bdvv-secret-key-2024'</code>) if the env var isn't set on the host — worth confirming the real Railway environment actually overrides this rather than running on the default.</p>
+</blockquote>
+<hr />
+<h2>⚙️ How the OS Works</h2>
+<h3>High Level</h3>
+<p>BDVTravelOS is BDV's internal operations tool: staff log in, see a Dashboard, manage travel inquiries and quotations in the Trip Planner, and track customer visas and documents in the CRM. A person fills out or updates something in the browser; that action goes to a backend service, which stores it and, in places, calls an AI (Claude) to help draft or process content; the result comes back to the browser.</p>
+<p>This description reflects the original Emergent-built version of the app (now the <code>/demo</code> copy). The new <code>/prod</code> version, covering only Dashboard, CRM, and Trip Planner for Phase 1, has not yet been built — its high-level flow should match this pattern but needs confirming once that code exists.</p>
+<h3>Low Level</h3>
+<p><strong>As inspected in the <code>/demo</code> (original Emergent) codebase:</strong></p>
+<ul>
+<li>Frontend: React app, deployed on Vercel.</li>
+<li>Backend: FastAPI service, deployed on Railway (a <code>Procfile</code> drives that deployment).</li>
+<li>Database: MongoDB, hosted as a Railway service alongside the backend — not Postgres/Supabase at that point.</li>
+<li>AI integration: the backend calls Claude directly for AI-assisted features.</li>
+<li>Deploy path: pushes to the repo trigger the frontend redeploy on Vercel and the backend redeploy on Railway independently — two separate deploy targets, not one.</li>
+</ul>
+<p><strong>What changes for <code>/prod</code> (pending — not yet built):</strong></p>
+<ul>
+<li>Database moves from MongoDB to Supabase (Postgres) — this changes the backend's data-access layer for whichever of Dashboard, CRM, and Trip Planner get migrated.</li>
+<li>Whether the backend stays on Railway/FastAPI or moves fully onto Vercel functions has not been decided/confirmed here.</li>
+<li>Exact request flow, endpoint list, and schema for the three Phase 1 modules should be cross-checked against the diagrams below once <code>/prod</code> exists.</li>
+</ul>
+<hr />
+<h2>📊 Diagrams</h2>
+<p>Generated via <a href="https://github.com/tt-a1i/archify">Archify</a> in Claude Code, run directly against this repo. All files sit in this same <code>/docs</code> folder — click through locally, or once a Vercel project is pointed at <code>/docs</code>, at <code>&lt;vercel-url&gt;/&lt;filename&gt;</code>.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Diagram</th>
+<th>Scope</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Runtime Architecture</td>
+<td>8–12 core components, one primary request path, trust boundaries between Vercel and Railway</td>
+<td><a href="./architecture.html"><code>architecture.html</code></a></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Request Data Flow</td>
+<td>Frontend → backend → MongoDB → Compass AI, end to end</td>
+<td><a href="./data-flow.html"><code>data-flow.html</code></a></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Login → Trip Planner Data Flow</td>
+<td>Scoped to Yash's login plus the Trip Planner module only</td>
+<td><a href="./dataflow-login-tripplanner.html"><code>dataflow-login-tripplanner.html</code></a></td>
+</tr>
+<tr>
+<td>4</td>
+<td>MongoDB Collection Relationships</td>
+<td>All 35 collections, relationships inferred (no ORM in the codebase)</td>
+<td><a href="./schema.html"><code>schema.html</code></a></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Deployment Topology</td>
+<td>Vercel + Railway split, env vars, cross-domain cookie/CORS relationship</td>
+<td><a href="./deployment.html"><code>deployment.html</code></a></td>
+</tr>
+<tr>
+<td>6</td>
+<td>API Map</td>
+<td>All 154 routes grouped by feature, admin-only vs. open-to-any-staff marked</td>
+<td><a href="./api-map.html"><code>api-map.html</code></a></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Inquiry to Quotation (sequence)</td>
+<td>One end-to-end user flow, call by call</td>
+<td><a href="./flow-booking.html"><code>flow-booking.html</code></a></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Frontend Component Map</td>
+<td>Pages, per-page API services, shared contexts</td>
+<td><a href="./components.html"><code>components.html</code></a></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Phase 1 Migration Map</td>
+<td>Dashboard / CRM / Trip Planner scoped against the full Emergent-era app</td>
+<td><a href="./migration-map.html"><code>migration-map.html</code></a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Suggested walkthrough order for onboarding Jash:</strong></p>
+<p><code>Architecture (1)</code> → <code>Deployment Topology (5)</code> → <code>Login→Trip Planner flow (3)</code> → <code>Schema (4)</code> → <code>API Map (6)</code> → <code>Migration Map (9)</code></p>
+<p>Component Map (8) and the general Data Flow / Inquiry-to-Quotation diagrams (2, 7) are better as reference material — they overlap with #3 and #1.</p>
+<hr />
+<h2>👀 Viewing the Diagrams</h2>
+<p>Each diagram is a single self-contained HTML file — nothing to install, no server to run.</p>
+<blockquote>
+<p>⚠️ <strong>GitHub's file viewer shows raw source code, not the rendered diagram.</strong> Clicking a <code>.html</code> file on github.com will show you a wall of code, not the picture. Use one of the two options below instead.</p>
+</blockquote>
+<p><strong>Option A — Open locally (works right now, no setup)</strong></p>
+<ol>
+<li>Clone the repo, or pull if you already have it:
+   <code>git clone &lt;repo-url&gt;</code></li>
+<li>Open the <code>docs/</code> folder on your computer (File Explorer / Finder).</li>
+<li>Double-click any <code>.html</code> file — it opens directly in your default browser as a local page.</li>
+<li>Repeat for any other diagram — each file is independent, so there's nothing else to download or configure.</li>
+</ol>
+<p><strong>Option B — Open via Vercel (once the <code>/docs</code> deployment is live)</strong></p>
+<p>Once a Vercel project is pointed at this <code>/docs</code> folder (tracked in <a href="#-open-items--next-steps">Open Items</a> below), every diagram gets a real URL:</p>
+<ol>
+<li>Go to <code>&lt;vercel-url&gt;/&lt;filename&gt;</code> — for example <code>bdv-architecture.vercel.app/architecture.html</code>.</li>
+<li>No cloning or downloading needed — works from any device, browser tab, or shared link.</li>
+<li>Worth bookmarking: <strong>Architecture</strong> and <strong>Deployment Topology</strong> are the two most people come back to.</li>
+</ol>
+<p><strong>If a diagram opens blank or looks broken:</strong> the file didn't fully download — each one is ~800 KB. Re-clone or re-download and try again.</p>
+<hr />
+<h2>📋 Open Items &amp; Next Steps</h2>
+<ul>
+<li>[ ] Confirm GitHub collaborator list and permission levels for all 5 BDV users + SNA team on the private repo</li>
+<li>[ ] Confirm whether a BDV-owned Supabase project already exists; if not, provision one and connect it</li>
+<li>[ ] Confirm the <code>/prod</code> root directory and framework settings on the <code>bdv-travel-os</code> Vercel project</li>
+<li>[x] Repo shared, all 9 diagrams generated — see <a href="#-diagrams">Diagrams</a> above. Low-Level section still worth a pass against the diagrams to replace remaining inferred detail</li>
+<li>[ ] Schedule Jash's first Co-Claude session and confirm which of the three Phase 1 modules he starts on</li>
+<li>[x] Custom domain — confirmed not needed; <code>/prod</code> stays on the <code>vercel.app</code> preview URL</li>
+</ul>
+<hr />
+
+  <div class="doc-footer">
+    Questions about this doc &rarr; Harsh Shah &middot; Questions about BDV's side &rarr; Yash Doshi<br>
+    <a href="index.html">&larr; Back to the diagram hub</a>
+  </div>
+</main>
+
+</body>
+</html>

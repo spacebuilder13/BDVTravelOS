@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BDVTravelOS — Diagram Hub</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#1A1D23; --muted:#5B6472; --faint:#8B93A0;
+    --navy:#16233F; --amber:#8A5A2B; --amber-strong:#C08A2E;
+    --bg:#FAFAF8; --paper:#FFFFFF; --line:#E7E2D8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Work Sans',sans-serif;font-size:16px;line-height:1.6}
+  a{color:inherit;text-decoration:none}
+  .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(250,250,248,0.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .topbar .brand{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--navy)}
+  .topbar .docs-link{font-size:14px;font-weight:600;color:var(--amber)}
+  .topbar .docs-link:hover{color:#5E3D1D}
+  main{max-width:1240px;margin:0 auto;padding:56px 32px 96px}
+  .hero{display:flex;flex-direction:column;gap:14px;margin-bottom:44px}
+  .eyebrow{display:inline-block;width:fit-content;padding:6px 14px;border-radius:999px;background:#F1E6D4;color:var(--amber-strong);font-size:13px;font-weight:600;letter-spacing:0.02em}
+  .hero h1{font-family:'Fraunces',serif;font-size:44px;font-weight:600;color:var(--navy);margin:0}
+  .hero p{max-width:720px;color:var(--muted);font-size:17px;line-height:1.6;margin:0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+  .card{display:flex;flex-direction:column;gap:12px;padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:16px;transition:border-color .15s ease,transform .15s ease}
+  .card:hover{border-color:var(--amber-strong);transform:translateY(-2px)}
+  .card .num{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--amber-strong)}
+  .card .title{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--navy)}
+  .card .desc{font-size:14px;line-height:1.55;color:var(--muted);flex-grow:1}
+  .card .open{font-size:13px;font-weight:600;color:var(--amber)}
+  footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  footer a{font-weight:600;color:var(--amber)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">BDVTravelOS</span>
+  <a class="docs-link" href="overview.html">Full documentation &rarr;</a>
+</div>
+
+<main>
+  <div class="hero">
+    <span class="eyebrow">BDVTravelOS &middot; Architecture Diagrams</span>
+    <h1>Diagram Hub</h1>
+    <p>Nine standalone diagrams generated via Archify, mapped straight from the BDVTravelOS codebase. Every card opens the diagram exactly as built — no wrapper, no embed. Prefer to read first? See the <a href="overview.html" style="color:var(--amber);font-weight:600">full documentation</a>.</p>
+  </div>
+
+  <div class="grid">
+
+    <a class="card" href="architecture.html">
+      <span class="num">01</span>
+      <span class="title">Runtime Architecture</span>
+      <span class="desc">8–12 core components, one primary request path, trust boundaries between Vercel and Railway.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+    <a class="card" href="data-flow.html">
+      <span class="num">02</span>
+      <span class="title">Request Data Flow</span>
+      <span class="desc">Frontend &rarr; backend &rarr; MongoDB &rarr; Compass AI, traced end to end.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+    <a class="card" href="dataflow-login-tripplanner.html">
+      <span class="num">03</span>
+      <span class="title">Login &rarr; Trip Planner Flow</span>
+      <span class="desc">Scoped to Yash's login plus the Trip Planner module only.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+    <a class="card" href="schema.html">
+      <span class="num">04</span>
+      <span class="title">MongoDB Collection Relationships</span>
+      <span class="desc">All 35 collections, relationships inferred — there's no ORM in the codebase.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+    <a class="card" href="deployment.html">
+      <span class="num">05</span>
+      <span class="title">Deployment Topology</span>
+      <span class="desc">Vercel + Railway split, env vars, the cross-domain cookie/CORS relationship.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+    <a class="card" href="api-map.html">
+      <span class="num">06</span>
+      <span class="title">API Map</span>
+      <span class="desc">All 154 routes grouped by feature, admin-only vs. open-to-any-staff marked.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+    <a class="card" href="flow-booking.html">
+      <span class="num">07</span>
+      <span class="title">Inquiry to Quotation</span>
+      <span class="desc">One end-to-end user flow, traced call by call.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+    <a class="card" href="components.html">
+      <span class="num">08</span>
+      <span class="title">Frontend Component Map</span>
+      <span class="desc">Pages, per-page API services, and shared contexts.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+    <a class="card" href="migration-map.html">
+      <span class="num">09</span>
+      <span class="title">Phase 1 Migration Map</span>
+      <span class="desc">Dashboard / CRM / Trip Planner scoped against the full Emergent-era app.</span>
+      <span class="open">Open diagram &rarr;</span>
+    </a>
+
+  </div>
+
+  <footer>
+    <span>Generated via Archify in Claude Code &middot; BDVTravelOS private repo</span>
+    <a href="overview.html">Full documentation &rarr;</a>
+  </footer>
+</main>
+
+</body>
+</html>
