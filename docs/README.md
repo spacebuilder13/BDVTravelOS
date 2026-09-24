@@ -84,7 +84,7 @@ These two items are about building the BDV team's own capability to work with Cl
 | Neel Doshi | BDV | Administrator |
 | Priyanka | BDV | Operations |
 | Utsav Modi | SNA (Spaceships & Atoms) | Mentor |
-| Harsh Shah | SNA (Spaceships & Atoms) | Migration lead |
+| Harsh Shah | SNA (Spaceships & Atoms) | Migration Handling |
 | Jash Doshi | SNA (Spaceships & Atoms) | Harness Engineer — this doc's intended reader |
 
 SNA is the outside team helping BDV execute this migration; the BDV-side names are the OS's actual business users and administrators.
