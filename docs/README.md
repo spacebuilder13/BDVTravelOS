@@ -1,6 +1,6 @@
 <div align="center">
 
-# BDVTravelOS — Engineering Overview
+# BDVTravelOS - Engineering Overview
 
 **Internal operations platform for BDV** · migrating from a single-repo Emergent build to a modern GitHub → Vercel → Supabase stack
 
@@ -16,9 +16,8 @@ Prepared by Harsh Shah (SNA) · last updated Sep 24, 2026
 
 ---
 
-This file lives in `/docs` alongside the architecture diagrams it references. It's written for anyone new to the BDVTravelOS migration project — right now, primarily **Jash Doshi** — to get oriented before doing active work.
-
-Every claim below is either **confirmed** (pulled directly from this repo's code, or a live check of a connected system) or **pending** (not yet decided, or not yet verifiable) — flagged rather than guessed.
+This file lives in `/docs` alongside the architecture diagrams it references. It's written for anyone new to the BDVTravelOS migration project.
+Every claim below is either **confirmed** (pulled directly from this repo's code, or a live check of a connected system) or **pending** (not yet decided, or not yet verifiable) - flagged rather than guessed.
 
 ## Contents
 
@@ -41,8 +40,8 @@ Every claim below is either **confirmed** (pulled directly from this repo's code
 | --- | --- |
 | **Frontend** | React (CRA/craco), deployed on Vercel |
 | **Backend** | FastAPI, deployed on Railway |
-| **Database (current)** | MongoDB, via Motor — 35 collections |
-| **Database (target)** | Supabase (Postgres) — not started yet |
+| **Database (current)** | MongoDB, via Motor - 35 collections |
+| **Database (target)** | Supabase (Postgres) - not started yet |
 | **Auth** | Staff name + 4-digit PIN → JWT in an httpOnly cookie |
 | **Repo structure (planned)** | `/demo` (untouched original) + `/prod` (Phase 1 modules, live) |
 | **Phase 1 modules** | Dashboard · CRM (Visa + Docs) · Trip Planner (Inquiry + Quotation) |
@@ -56,7 +55,7 @@ BDVTravelOS is being migrated off its original Emergent-built stack onto a new s
 **Migration approach**
 
 1. The full Emergent-era repo was copy-pasted as-is into a new private GitHub repo (done).
-2. That new repo will hold two top-level folders: `/demo` (the untouched Emergent copy, kept as reference/rollback — not deployed) and `/prod` (where the real migration work happens, module by module — this is what deploys live on the Vercel link).
+2. That new repo will hold two top-level folders: `/demo` (the untouched Emergent copy, kept as reference/rollback - not deployed) and `/prod` (where the real migration work happens, module by module - this is what deploys live on the Vercel link).
 
 **Phase 1 — three modules move into `/prod`:**
 
@@ -111,9 +110,9 @@ SNA is the outside team helping BDV execute this migration; the BDV-side names a
 
 > Confirmed directly from this repo.
 
-**Engine today:** MongoDB, accessed via Motor (`motor.motor_asyncio.AsyncIOMotorClient`) — not Postgres/Supabase yet. Connection comes from the `MONGO_URL` + `DB_NAME` env vars (`backend/.env.example` defaults `DB_NAME=bdv_travel_os`).
+**Engine today:** MongoDB, accessed via Motor (`motor.motor_asyncio.AsyncIOMotorClient`) - not Postgres/Supabase yet. Connection comes from the `MONGO_URL` + `DB_NAME` env vars (`backend/.env.example` defaults `DB_NAME=bdv_travel_os`).
 
-**Schema:** no ORM or schema layer — collections are plain dicts, validated only at the Pydantic request-model level in FastAPI, not at the database itself.
+**Schema:** no ORM or schema layer - collections are plain dicts, validated only at the Pydantic request-model level in FastAPI, not at the database itself.
 
 <details>
 <summary><strong>Collections (35 total, one database)</strong></summary>
@@ -125,7 +124,7 @@ SNA is the outside team helping BDV execute this migration; the BDV-side names a
 
 **Target:** Supabase (Postgres) is the stated destination for `/prod`, but `CLAUDE.md` in this repo explicitly calls this out as a separate, deliberate follow-up — not started yet. No Supabase project for BDVTravelOS exists in the connected Supabase account either as of this writing.
 
-**File uploads aren't in the database:** they're written to local disk under `backend/uploads/` and served at `/api/uploads/...`. This needs a persistent volume on whatever host runs the backend (currently a Railway volume) — worth flagging if `/prod`'s backend ever moves off Railway, or if uploads should move to object storage (S3/Supabase Storage) as part of the same phase as the Postgres migration.
+**File uploads aren't in the database:** they're written to local disk under `backend/uploads/` and served at `/api/uploads/...`. This needs a persistent volume on whatever host runs the backend (currently a Railway volume) - worth flagging if `/prod`'s backend ever moves off Railway, or if uploads should move to object storage (S3/Supabase Storage) as part of the same phase as the Postgres migration.
 
 ---
 
@@ -133,15 +132,15 @@ SNA is the outside team helping BDV execute this migration; the BDV-side names a
 
 > Confirmed directly from this repo, combined with a live check of the connected Vercel project.
 
-**Two separate hosts, cross-domain:** frontend on Vercel (root directory `frontend/`, `yarn build` → static `build/` output, all routes rewritten to `index.html` — a client-side-routed SPA); backend + MongoDB on Railway (root directory `backend/`, started via `Procfile`: `uvicorn server:app --host 0.0.0.0 --port $PORT`).
+**Two separate hosts, cross-domain:** frontend on Vercel (root directory `frontend/`, `yarn build` → static `build/` output, all routes rewritten to `index.html` - a client-side-routed SPA); backend + MongoDB on Railway (root directory `backend/`, started via `Procfile`: `uvicorn server:app --host 0.0.0.0 --port $PORT`).
 
-**Cross-site auth by design:** because Vercel and Railway are different domains, the auth cookie is set with `samesite="none"; secure=true` — required for it to survive a cross-site request. The backend's `CORS_ORIGINS` env var is a comma-separated allow-list that must be kept in sync with whatever Vercel URL is currently live; the code's own comment warns that a stale `CORS_ORIGINS` after a Vercel URL change causes CORS failures on the frontend with no obvious error message.
+**Cross-site auth by design:** because Vercel and Railway are different domains, the auth cookie is set with `samesite="none"; secure=true` - required for it to survive a cross-site request. The backend's `CORS_ORIGINS` env var is a comma-separated allow-list that must be kept in sync with whatever Vercel URL is currently live; the code's own comment warns that a stale `CORS_ORIGINS` after a Vercel URL change causes CORS failures on the frontend with no obvious error message.
 
-**No `/demo` / `/prod` split in this codebase yet:** as of this writing this repo is still one flat tree (`backend/`, `frontend/`), matching `CLAUDE.md`'s own note: *"No demo/prod environment separation yet — there is currently one deployment."* The `/demo` + `/prod` folder split described in Current Scope is the plan for the next step.
+**No `/demo` / `/prod` split in this codebase yet:** as of this writing this repo is still one flat tree (`backend/`, `frontend/`), matching `CLAUDE.md`'s own note: *"No demo/prod environment separation yet - there is currently one deployment."* The `/demo` + `/prod` folder split described in Current Scope is the plan for the next step.
 
-**Live Vercel project (`bdv-travel-os`):** no custom domain attached, Vercel Authentication (SSO) on for all deployments except custom domains, no framework auto-detected, and the project isn't marked live — consistent with `/prod` not having this application's code pushed to it yet. Confirmed: `/prod` stays on the current `vercel.app` URL, no custom domain planned for go-live.
+**Live Vercel project (`bdv-travel-os`):** no custom domain attached, Vercel Authentication (SSO) on for all deployments except custom domains, no framework auto-detected, and the project isn't marked live - consistent with `/prod` not having this application's code pushed to it yet. Confirmed: `/prod` stays on the current `vercel.app` URL, no custom domain planned for go-live.
 
-> ⚠️ **Worth flagging:** `JWT_SECRET` has a hardcoded fallback (`'bdvv-secret-key-2024'`) if the env var isn't set on the host — worth confirming the real Railway environment actually overrides this rather than running on the default.
+> ⚠️ **Worth flagging:** `JWT_SECRET` has a hardcoded fallback (`'bdvv-secret-key-2024'`) if the env var isn't set on the host - worth confirming the real Railway environment actually overrides this rather than running on the default.
 
 ---
 
@@ -151,7 +150,7 @@ SNA is the outside team helping BDV execute this migration; the BDV-side names a
 
 BDVTravelOS is BDV's internal operations tool: staff log in, see a Dashboard, manage travel inquiries and quotations in the Trip Planner, and track customer visas and documents in the CRM. A person fills out or updates something in the browser; that action goes to a backend service, which stores it and, in places, calls an AI (Claude) to help draft or process content; the result comes back to the browser.
 
-This description reflects the original Emergent-built version of the app (now the `/demo` copy). The new `/prod` version, covering only Dashboard, CRM, and Trip Planner for Phase 1, has not yet been built — its high-level flow should match this pattern but needs confirming once that code exists.
+This description reflects the original Emergent-built version of the app (now the `/demo` copy). The new `/prod` version, covering only Dashboard, CRM, and Trip Planner for Phase 1, has not yet been built - its high-level flow should match this pattern but needs confirming once that code exists.
 
 ### Low Level
 
@@ -159,13 +158,13 @@ This description reflects the original Emergent-built version of the app (now th
 
 - Frontend: React app, deployed on Vercel.
 - Backend: FastAPI service, deployed on Railway (a `Procfile` drives that deployment).
-- Database: MongoDB, hosted as a Railway service alongside the backend — not Postgres/Supabase at that point.
+- Database: MongoDB, hosted as a Railway service alongside the backend - not Postgres/Supabase at that point.
 - AI integration: the backend calls Claude directly for AI-assisted features.
-- Deploy path: pushes to the repo trigger the frontend redeploy on Vercel and the backend redeploy on Railway independently — two separate deploy targets, not one.
+- Deploy path: pushes to the repo trigger the frontend redeploy on Vercel and the backend redeploy on Railway independently - two separate deploy targets, not one.
 
-**What changes for `/prod` (pending — not yet built):**
+**What changes for `/prod` (pending - not yet built):**
 
-- Database moves from MongoDB to Supabase (Postgres) — this changes the backend's data-access layer for whichever of Dashboard, CRM, and Trip Planner get migrated.
+- Database moves from MongoDB to Supabase (Postgres) - this changes the backend's data-access layer for whichever of Dashboard, CRM, and Trip Planner get migrated.
 - Whether the backend stays on Railway/FastAPI or moves fully onto Vercel functions has not been decided/confirmed here.
 - Exact request flow, endpoint list, and schema for the three Phase 1 modules should be cross-checked against the diagrams below once `/prod` exists.
 
@@ -197,19 +196,19 @@ Component Map (8) and the general Data Flow / Inquiry-to-Quotation diagrams (2, 
 
 ## 👀 Viewing the Diagrams
 
-Each diagram is a single self-contained HTML file — nothing to install, no server to run.
+Each diagram is a single self-contained HTML file - nothing to install, no server to run.
 
 > ⚠️ **GitHub's file viewer shows raw source code, not the rendered diagram.** Clicking a `.html` file on github.com will show you a wall of code, not the picture. Use one of the two options below instead.
 
-**Option A — Open locally (works right now, no setup)**
+**Open locally (works right now, no setup)**
 
 1. Clone the repo, or pull if you already have it:
    ```
    git clone <repo-url>
    ```
 2. Open the `docs/` folder on your computer (File Explorer / Finder).
-3. Double-click any `.html` file — it opens directly in your default browser as a local page.
-4. Repeat for any other diagram — each file is independent, so there's nothing else to download or configure.
+3. Double-click any `.html` file - it opens directly in your default browser as a local page.
+4. Repeat for any other diagram - each file is independent, so there's nothing else to download or configure.
 
 ---
 
@@ -218,14 +217,14 @@ Each diagram is a single self-contained HTML file — nothing to install, no ser
 - [ ] Confirm GitHub collaborator list and permission levels for all 5 BDV users + SNA team on the private repo
 - [ ] Confirm whether a BDV-owned Supabase project already exists; if not, provision one and connect it
 - [ ] Confirm the `/prod` root directory and framework settings on the `bdv-travel-os` Vercel project
-- [x] Repo shared, all 9 diagrams generated — see [Diagrams](#-diagrams) above. Low-Level section still worth a pass against the diagrams to replace remaining inferred detail
+- [x] Repo shared, all 9 diagrams generated - see [Diagrams](#-diagrams) above. Low-Level section still worth a pass against the diagrams to replace remaining inferred detail
 - [ ] Schedule Jash's first Co-Claude session and confirm which of the three Phase 1 modules he starts on
-- [x] Custom domain — confirmed not needed; `/prod` stays on the `vercel.app` preview URL
+- [x] Custom domain - confirmed not needed; `/prod` stays on the `vercel.app` preview URL
 
 ---
 
 <div align="center">
 
-Questions about this doc → Harsh Shah · Questions about BDV's side → Yash Doshi
+Questions about this doc → Harsh Shah ·
 
 </div>
