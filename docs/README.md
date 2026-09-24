@@ -30,6 +30,7 @@ Every claim below is either **confirmed** (pulled directly from this repo's code
 - [Network & Infrastructure](#-network--infrastructure)
 - [How the OS Works](#️-how-the-os-works)
 - [Diagrams](#-diagrams)
+- [Viewing the Diagrams](#-viewing-the-diagrams)
 - [Open Items & Next Steps](#-open-items--next-steps)
 
 ---
@@ -84,8 +85,8 @@ These two items are about building the BDV team's own capability to work with Cl
 | Neel Doshi | BDV | Administrator |
 | Priyanka | BDV | Operations |
 | Utsav Modi | SNA (Spaceships & Atoms) | Mentor |
-| Harsh Shah | SNA (Spaceships & Atoms) | Migration Handling |
-| Jash Doshi | SNA (Spaceships & Atoms) | Harness Engineer — this doc's intended reader |
+| Harsh Shah | SNA (Spaceships & Atoms) | Migration Associate |
+| Jash Doshi | SNA (Spaceships & Atoms) | Harness Engineer |
 
 SNA is the outside team helping BDV execute this migration; the BDV-side names are the OS's actual business users and administrators.
 
@@ -99,24 +100,6 @@ SNA is the outside team helping BDV execute this migration; the BDV-side names a
 
 **Protected admins:** `PROTECTED_ADMINS = {"yash doshi", "dolly doshi", "isha doshi", "neel doshi"}` is hardcoded in `server.py`. A startup routine (`seed_protected_admins`) guarantees all four always exist with `role: admin` and `is_protected: true`, re-marking them protected on every boot. Protected admins cannot be deleted and cannot have their role changed away from admin — both enforced server-side.
 
-<details>
-<summary><strong>Seeded staff accounts (from <code>DEFAULT_STAFF</code>)</strong></summary>
-<br>
-
-| Name | Seed role | Default PIN | Protected |
-| --- | --- | --- | --- |
-| Yash Doshi | admin | 0000 | Yes |
-| Dolly Doshi | admin | 0000 | Yes |
-| Isha Doshi | admin | 0000 | Yes |
-| Neel Doshi | admin | 0000 | Yes |
-| Priyanka | accounts | 3333 | No |
-| Karan | sales | 1111 | No |
-| Khushi | operations | 2222 | No |
-| Prushti | sales | 4444 | No |
-
-Note: the code seeds Priyanka's role as `accounts`, not `operations` — worth confirming with Yash which is current. Karan, Khushi, and Prushti aren't in the core team list above either; they may be other BDV staff outside this migration's direct stakeholders.
-
-</details>
 
 **Role enforcement is narrow:** of 154 API routes in `server.py`, only 5 check `role == "admin"` — create staff, update staff, delete staff, reset a staff member's PIN, and update brand/site settings. Every other route (CRM, Trip Planner, Visa, Quotations, etc.) only requires a valid login; any authenticated staff member can read and write there regardless of role. There is no module-level permission system — e.g. Priyanka's account isn't restricted from Trip Planner, nor is a `sales` account restricted from Visa/Docs.
 
@@ -209,6 +192,24 @@ Generated via [Archify](https://github.com/tt-a1i/archify) in Claude Code, run d
 `Architecture (1)` → `Deployment Topology (5)` → `Login→Trip Planner flow (3)` → `Schema (4)` → `API Map (6)` → `Migration Map (9)`
 
 Component Map (8) and the general Data Flow / Inquiry-to-Quotation diagrams (2, 7) are better as reference material — they overlap with #3 and #1.
+
+---
+
+## 👀 Viewing the Diagrams
+
+Each diagram is a single self-contained HTML file — nothing to install, no server to run.
+
+> ⚠️ **GitHub's file viewer shows raw source code, not the rendered diagram.** Clicking a `.html` file on github.com will show you a wall of code, not the picture. Use one of the two options below instead.
+
+**Option A — Open locally (works right now, no setup)**
+
+1. Clone the repo, or pull if you already have it:
+   ```
+   git clone <repo-url>
+   ```
+2. Open the `docs/` folder on your computer (File Explorer / Finder).
+3. Double-click any `.html` file — it opens directly in your default browser as a local page.
+4. Repeat for any other diagram — each file is independent, so there's nothing else to download or configure.
 
 ---
 
