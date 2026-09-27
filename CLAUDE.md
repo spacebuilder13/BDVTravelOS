@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # BDV Travel OS — Claude Code Guide
 
 Internal ops platform for Blue Diamond Voyage (travel agency): lead intake, quotations, itinerary planning, visa docs, CRM. Migrated off Emergent to a standard GitHub/Vercel/Railway stack so it can be maintained here going forward.

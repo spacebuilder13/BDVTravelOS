@@ -6,10 +6,12 @@ Tests migration endpoint idempotency and new collections (places, trip_component
 
 import requests
 import sys
+import os
 from datetime import datetime
 
 class MigrationTester:
-    def __init__(self, base_url="https://travel-agency-os-4.preview.emergentagent.com"):
+    def __init__(self, base_url=None):
+        base_url = base_url or os.environ.get("BDV_API_BASE_URL", "http://localhost:8000")
         self.base_url = f"{base_url}/api"
         self.token = None
         self.tests_run = 0

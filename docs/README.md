@@ -140,7 +140,7 @@ SNA is the outside team helping BDV execute this migration; the BDV-side names a
 
 **Live Vercel project (`bdv-travel-os`):** no custom domain attached, Vercel Authentication (SSO) on for all deployments except custom domains, no framework auto-detected, and the project isn't marked live - consistent with `/prod` not having this application's code pushed to it yet. Confirmed: `/prod` stays on the current `vercel.app` URL, no custom domain planned for go-live.
 
-> ⚠️ **Worth flagging:** `JWT_SECRET` has a hardcoded fallback (`'bdvv-secret-key-2024'`) if the env var isn't set on the host - worth confirming the real Railway environment actually overrides this rather than running on the default.
+> ⚠️ **Worth flagging:** `JWT_SECRET` is required at startup. Confirm Railway sets a strong value before deploying.
 
 ---
 
@@ -196,26 +196,17 @@ Component Map (8) and the general Data Flow / Inquiry-to-Quotation diagrams (2, 
 
 ## 👀 Viewing the Diagrams
 
-<<<<<<< HEAD
 Each diagram is a single self-contained HTML file — nothing to install, no server to run.
 
 > ⚠️ **GitHub's file viewer shows raw source code, not the rendered diagram.** Clicking a `.html` file on github.com will show you a wall of code, not the picture. Use one of the two options below instead.
 
 **Option A — Open locally (works right now, no setup)**
-=======
-Each diagram is a single self-contained HTML file - nothing to install, no server to run.
-
-> ⚠️ **GitHub's file viewer shows raw source code, not the rendered diagram.** Clicking a `.html` file on github.com will show you a wall of code, not the picture. Use one of the two options below instead.
-
-**Open locally (works right now, no setup)**
->>>>>>> 0f0d65345285a861ce73c8311d883fc14ece5baa
 
 1. Clone the repo, or pull if you already have it:
    ```
    git clone <repo-url>
    ```
 2. Open the `docs/` folder on your computer (File Explorer / Finder).
-<<<<<<< HEAD
 3. Double-click any `.html` file — it opens directly in your default browser as a local page.
 4. Repeat for any other diagram — each file is independent, so there's nothing else to download or configure.
 
@@ -228,10 +219,6 @@ Once a Vercel project is pointed at this `/docs` folder (tracked in [Open Items]
 3. Worth bookmarking: **Architecture** and **Deployment Topology** are the two most people come back to.
 
 **If a diagram opens blank or looks broken:** the file didn't fully download — each one is ~800 KB. Re-clone or re-download and try again.
-=======
-3. Double-click any `.html` file - it opens directly in your default browser as a local page.
-4. Repeat for any other diagram - each file is independent, so there's nothing else to download or configure.
->>>>>>> 0f0d65345285a861ce73c8311d883fc14ece5baa
 
 ---
 

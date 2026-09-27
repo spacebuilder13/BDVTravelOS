@@ -7,9 +7,10 @@ Tests AI generation endpoint and model configuration
 import requests
 import sys
 import json
+import os
 from datetime import datetime
 
-BASE_URL = "https://travel-agency-os-4.preview.emergentagent.com/api"
+BASE_URL = os.environ.get("BDV_API_BASE_URL", "http://localhost:8000/api").rstrip("/")
 
 class TestRunner:
     def __init__(self):

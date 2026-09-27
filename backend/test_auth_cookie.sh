@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_URL="https://travel-agency-os-4.preview.emergentagent.com/api"
+BASE_URL="${BDV_API_BASE_URL:-http://localhost:8000/api}"
 COOKIE_FILE="/tmp/auth_cookies.txt"
 
 echo "=== Testing Auth Cookie Migration ==="

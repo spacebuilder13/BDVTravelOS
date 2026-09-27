@@ -1,0 +1,8 @@
+---
+alwaysApply: true
+---
+
+Use `AGENTS.md` as the canonical project instructions for this repository.
+
+Before editing, read `AGENTS.md` plus the files directly touched by the task. Keep changes focused, preserve existing backend/frontend patterns, and do not commit secrets or runtime uploads.
+

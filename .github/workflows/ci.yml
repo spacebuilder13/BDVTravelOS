@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for merge conflict markers
+        run: |
+          ! grep -RInE '^(<<<<<<<|=======|>>>>>>>)' . \
+            --exclude-dir=.git \
+            --exclude=frontend/yarn.lock \
+            --exclude='*.html'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pip install -r requirements.txt
+
+      - name: Compile backend and smoke scripts
+        working-directory: backend
+        env:
+          MONGO_URL: mongodb://localhost:27017
+          DB_NAME: bdv_travel_os_test
+          JWT_SECRET: test-secret
+          CORS_ORIGINS: http://localhost:3000
+        run: |
+          python -m py_compile \
+            server.py \
+            backend_test.py \
+            migration_test.py \
+            test_trip_clone.py \
+            test_multi_currency_quote.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: yarn install --frozen-lockfile
+
+      - name: Build frontend
+        working-directory: frontend
+        env:
+          CI: false
+          REACT_APP_BACKEND_URL: http://localhost:8000
+        run: yarn build

@@ -7,10 +7,12 @@ Tests all Quote endpoints including CRUD, multi-currency, status workflow, PDF/E
 
 import requests
 import sys
+import os
 from datetime import datetime, timedelta
 
 class CRMAPITester:
-    def __init__(self, base_url="https://travel-agency-os-4.preview.emergentagent.com"):
+    def __init__(self, base_url=None):
+        base_url = base_url or os.environ.get("BDV_API_BASE_URL", "http://localhost:8000")
         self.base_url = f"{base_url}/api"
         self.token = None
         self.tests_run = 0

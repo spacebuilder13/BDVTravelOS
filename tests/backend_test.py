@@ -1,10 +1,11 @@
 import requests
 import sys
+import os
 from datetime import datetime
 
 class BDVTravelOSAPITester:
-    def __init__(self, base_url="https://travel-agency-os-4.preview.emergentagent.com"):
-        self.base_url = base_url
+    def __init__(self, base_url=None):
+        self.base_url = (base_url or os.environ.get("BDV_API_BASE_URL", "http://localhost:8000")).rstrip("/")
         self.token = None
         self.tests_run = 0
         self.tests_passed = 0
