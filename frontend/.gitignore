@@ -11,6 +11,9 @@
 # production
 /build
 
+# Copied from ../docs at build time. Source of truth stays in /docs.
+/public/docs
+
 # misc
 .DS_Store
 .env.local

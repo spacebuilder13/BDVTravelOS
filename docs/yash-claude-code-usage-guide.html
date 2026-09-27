@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BDVTravelOS — Claude Code Guide for Yash</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  :root{
+    --ink:#1A1D23; --muted:#5B6472; --faint:#8B93A0;
+    --navy:#16233F; --amber:#8A5A2B; --amber-strong:#C08A2E;
+    --bg:#FAFAF8; --paper:#FFFFFF; --line:#E7E2D8; --line-soft:#ECE7DC;
+    --callout-bg:#FBF3E4; --callout-border:#E8D3A6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Work Sans',sans-serif;font-size:16px;line-height:1.65}
+  a{color:var(--amber)}
+  a:hover{color:#5E3D1D}
+  .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(250,250,248,0.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+  .topbar a{font-size:14px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  .topbar .brand{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--navy)}
+  main{max-width:760px;margin:0 auto;padding:56px 24px 96px}
+  .doc-header{text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;padding-bottom:40px;margin-bottom:40px;border-bottom:1px solid var(--line)}
+  .doc-header h1{font-family:'Fraunces',serif;font-size:38px;font-weight:600;color:var(--navy);margin:0;line-height:1.15}
+  .doc-header .tagline{max-width:520px;color:var(--muted);font-size:16px;margin:0}
+  .doc-header .byline{color:var(--faint);font-size:13px}
+  h1,h2,h3{font-family:'Fraunces',serif;color:var(--navy);font-weight:600}
+  h2{font-size:26px;margin:52px 0 18px;padding-top:8px}
+  h2:first-of-type{margin-top:0}
+  h3{font-size:19px;margin:28px 0 10px}
+  p{color:var(--ink);margin:14px 0}
+  ul,ol{padding-left:22px;margin:14px 0}
+  li{margin:6px 0}
+  strong{color:var(--navy);font-weight:600}
+  code{font-family:'IBM Plex Mono',monospace;font-size:13px;background:#F1ECE0;color:#5A4A2E;padding:2px 6px;border-radius:5px}
+  hr{border:none;border-top:1px solid var(--line);margin:48px 0}
+  .table-wrap{overflow-x:auto;margin:18px 0 28px}
+  table{width:100%;border-collapse:collapse;margin:0;font-size:14px}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{font-weight:600;color:var(--navy);border-bottom:2px solid var(--line)}
+  tr:last-child td{border-bottom:none}
+  blockquote{margin:20px 0;padding:14px 18px;background:var(--callout-bg);border:1px solid var(--callout-border);border-radius:10px;color:#5A4A2E}
+  blockquote p{margin:0;color:inherit;font-size:15px}
+  .doc-footer{text-align:center;margin-top:64px;padding-top:28px;border-top:1px solid var(--line);color:var(--faint);font-size:13px}
+  @media (max-width:640px){
+    .topbar{padding:14px 20px}
+    .doc-header h1{font-size:32px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">&larr; Back to diagrams</a>
+  <span class="brand">BDVTravelOS</span>
+</div>
+
+<main>
+  <div class="doc-header">
+    <h1>Claude Code for BDVTravelOS</h1>
+    <p class="tagline">How Yash Doshi (and the BDV team) works with this repo through Claude Code</p>
+    <p class="byline">Prepared by Harsh Shah (SNA) &middot; last updated Sep 26, 2026</p>
+  </div>
+
+  <p>This is the enablement-track doc referenced in the <a href="overview.html">engineering overview</a> under Current Scope. It is written for Yash directly, not for the SNA engineering side. It answers one question: <strong>when Yash wants BDVTravelOS to do something, how does he actually ask Claude Code to do it?</strong></p>
+
+  <h2>Contents</h2>
+  <ul>
+    <li><a href="#session">1. How Yash Gets Into a Session</a></li>
+    <li><a href="#two-doors">2. The Golden Rule: One Repo, Two Doors</a></li>
+    <li><a href="#bug">3. Use Case: Find a Bug</a></li>
+    <li><a href="#ui">4. Use Case: UI Changes</a></li>
+    <li><a href="#feature">5. Use Case: New Feature</a></li>
+    <li><a href="#database">6. Use Case: Database CRUD Operations</a></li>
+    <li><a href="#uploads">7. Use Case: Document Uploads / Corrections</a></li>
+    <li><a href="#never">8. What Yash Should Never Ask Claude to Do Directly</a></li>
+    <li><a href="#quick-reference">9. Quick Reference</a></li>
+  </ul>
+
+  <h2 id="session">1. How Yash Gets Into a Session</h2>
+  <p>Two ways to reach Claude Code on this repo, and Yash will use both depending on the task:</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Entry point</th>
+          <th>When to use it</th>
+          <th>What it looks like</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Claude Code on the web</strong> (claude.ai/code)</td>
+          <td>Anything code-related: bug fix, new screen, new endpoint, a change that should end up as a commit/PR on <code>bdvtravelos</code></td>
+          <td>Open a session against the <code>spacebuilder13/bdvtravelos</code> repo, describe the task in plain English, review the diff, approve the PR</td>
+        </tr>
+        <tr>
+          <td><strong>Live Co-Claude session</strong> (screen-share with Harsh/Jash)</td>
+          <td>Learning the workflow itself, anything ambiguous, first few times doing a given use case</td>
+          <td>Same tool, but driven together until Yash is comfortable doing it solo</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Yash does <strong>not</strong> need to touch git, a terminal, Railway, or Vercel directly for any of the use cases below. Claude Code handles branching, committing, and pushing. Yash's job is to describe what's wrong or what's wanted, and to review/approve the result (in a live session) or read the PR description (async).</p>
+  <p><strong>One rule that never changes:</strong> every change goes through a pull request, never straight to <code>main</code>. Someone (Harsh, Jash, or a BDV admin once trained) reviews and merges. This is what keeps a bad AI-suggested change from reaching the live app.</p>
+
+  <h2 id="two-doors">2. The Golden Rule: One Repo, Two Doors</h2>
+  <p>BDVTravelOS is one codebase with two surfaces that non-technical users touch differently:</p>
+  <ul>
+    <li><strong>The app itself</strong> (<a href="https://bdvtravelos.vercel.app">bdvtravelos.vercel.app</a>) is where Yash's team does their day-to-day work: entering enquiries, building quotes, uploading visa docs. Nothing here talks to Claude Code directly.</li>
+    <li><strong>This repo, through Claude Code</strong> is where Yash asks for the app to be <em>changed</em>. Every use case below is the same loop: <strong>describe &rarr; Claude drafts the change &rarr; you look at it &rarr; it becomes a PR &rarr; someone merges it &rarr; it deploys.</strong></li>
+  </ul>
+  <p>Nothing Yash types into a Claude Code session touches the live database or the live site immediately. Claude works in the repo; deployment happens afterward (Vercel/Railway auto-deploy on merge to <code>main</code>, per the <a href="overview.html">engineering overview</a>).</p>
+
+  <h2 id="bug">3. Use Case: Find a Bug</h2>
+  <blockquote>
+    <p><strong>Example prompt:</strong> &ldquo;When I try to upload a passport scan on the Visa page, the file picker opens but nothing happens after I select a file.&rdquo;</p>
+  </blockquote>
+  <p>What happens:</p>
+  <ol>
+    <li>Claude reads the relevant frontend page (<code>frontend/src/pages/Visa.jsx</code>), its API wrapper, and the matching backend route in <code>backend/server.py</code>.</li>
+    <li>Claude reproduces the bug in reasoning (and in a live session, in the running app) to confirm the root cause before touching code.</li>
+    <li>Claude proposes and applies the fix, then explains in plain language what was wrong and what changed.</li>
+    <li>Fix goes out as a PR for review.</li>
+  </ol>
+  <p><strong>Yash's part:</strong> describe the symptom as specifically as possible. Which page, what you clicked, what you expected vs. what happened, whether it's every time or sometimes. Screenshots help a lot; Claude Code can read images.</p>
+
+  <h2 id="ui">4. Use Case: UI Changes</h2>
+  <blockquote>
+    <p><strong>Example prompt:</strong> &ldquo;On the CRM inquiry list, add a filter so I can see only enquiries from the last 7 days.&rdquo; or &ldquo;Make the Quotation PDF preview button more visible. It's easy to miss.&rdquo;</p>
+  </blockquote>
+  <p>What happens:</p>
+  <ol>
+    <li>Claude finds the relevant page under <code>frontend/src/pages/</code> and any shared components it uses.</li>
+    <li>Claude makes the change and, where practical, runs the dev server and takes a screenshot to confirm it looks right before proposing it.</li>
+    <li>Small/contained UI tweaks (copy changes, button styling, adding a filter to an existing list) are usually a single short PR.</li>
+  </ol>
+  <p><strong>Yash's part:</strong> describe what should look or behave differently and, if you have one in mind, roughly where (which page, which section). A reference screenshot or a sketch of what you want is fine to share.</p>
+
+  <h2 id="feature">5. Use Case: New Feature</h2>
+  <blockquote>
+    <p><strong>Example prompt:</strong> &ldquo;I want a way to mark a quotation as 'sent to client' and track when the client viewed it.&rdquo;</p>
+  </blockquote>
+  <p>This is bigger than a bug fix or a UI tweak, so it goes through an extra step:</p>
+  <ol>
+    <li>Claude reads the existing pattern for similar features (for example, how quote status is currently tracked in <code>server.py</code> and <code>Quotations.jsx</code>) so the new feature matches the app's conventions.</li>
+    <li>Claude proposes a short plan first: new field(s), new endpoint(s), what the UI change looks like. That happens before writing code, so Yash can redirect early if it's not what he meant.</li>
+    <li>Once approved, the feature is built across backend and frontend together and shipped as one PR (or a few, if it's large).</li>
+  </ol>
+  <p><strong>Yash's part:</strong> describe the outcome you want, not the implementation. &ldquo;I want to know when a client has viewed the quote&rdquo; is enough. Claude will figure out the data model and UI. Expect a back-and-forth on scope for anything non-trivial before code gets written.</p>
+
+  <h2 id="database">6. Use Case: Database CRUD Operations</h2>
+  <p>This covers two different things. Worth keeping them separate:</p>
+  <h3>(a) Add a field / change how something is stored</h3>
+  <p>Example: &ldquo;Add a 'preferred contact method' field to client records.&rdquo; This is a code change. Claude edits the Pydantic model and the relevant routes in <code>server.py</code>, and the corresponding form/display in the frontend. It goes through the normal PR flow above.</p>
+  <h3>(b) Fix or change actual data that's already in the database</h3>
+  <p>Example: &ldquo;Client X's enquiry got duplicated, please remove the extra one.&rdquo; This is a <strong>live data change</strong>, not a code change, and BDVTravelOS currently has no admin UI for arbitrary record edits. Two options, in order of preference:</p>
+  <ol>
+    <li><strong>Prefer doing it through the app UI</strong> where a screen already exists for that data (editing a client record, correcting a quote line item, and so on). This is safest because it goes through the same validation the app itself uses.</li>
+    <li><strong>If no UI exists for it,</strong> this needs a one-off, reviewed script or a direct database action run by Harsh/Jash against the actual Railway MongoDB instance. Claude Code sessions on this repo do not have standing write access to the live production database, and shouldn't be given it. Flag these to SNA directly rather than asking Claude Code in a repo session to just go fix the record.</li>
+  </ol>
+  <p><strong>Yash's part:</strong> if it's &ldquo;the app should behave differently going forward,&rdquo; that's a repo change. Ask Claude Code as usual. If it's &ldquo;this specific record is wrong right now,&rdquo; that's a live-data request. Flag it to Harsh/Jash rather than expecting a repo-session prompt to touch production data directly.</p>
+
+  <h2 id="uploads">7. Use Case: Document Uploads / Corrections</h2>
+  <p>Answering the specific question from the brief: <strong>should this be from the UI, from chat, or both?</strong></p>
+  <p><strong>Both, but for different things:</strong></p>
+  <ul>
+    <li><strong>Actually uploading a client's passport/visa document</strong> always goes through the app UI (Visa module), the way staff do it today. File uploads land on the backend's local disk under <code>backend/uploads/</code> and are tied to a specific client/enquiry record. This is a live-app action, not something to route through a Claude Code chat session. Same logic as 6(b): this is live data, not code.</li>
+    <li><strong>Fixing how uploads work</strong> (for example, &ldquo;PDF uploads over 10MB fail silently,&rdquo; &ldquo;let staff upload multiple visa docs at once,&rdquo; &ldquo;show a progress bar while uploading&rdquo;) is a code/feature change, so it goes through Claude Code exactly like the UI/feature use cases above.</li>
+    <li><strong>Correcting a mistake in an already-uploaded document's metadata</strong> (wrong document type tagged, attached to the wrong client) is live data (case 6b). Fix it in the app UI if there's a screen for it. If not, flag it to Harsh/Jash. Don't ask a Claude Code repo session to reach into <code>backend/uploads/</code> directly.</li>
+  </ul>
+  <p><strong>Rule of thumb Yash can apply generally:</strong> if the answer to &ldquo;does this change what the app <em>does</em>&rdquo; is yes, use Claude Code, a repo session, and PR review. If the answer to &ldquo;does this change what a specific record currently <em>holds</em>&rdquo; is yes, use the app UI first and an SNA request second. Claude Code is for changing the software, not for being a side-channel into the live database or file storage.</p>
+
+  <h2 id="never">8. What Yash Should Never Ask Claude to Do Directly</h2>
+  <ul>
+    <li>Push straight to <code>main</code> / skip PR review, even for &ldquo;just a tiny fix.&rdquo;</li>
+    <li>Edit live production data directly from a Claude Code repo session (see &sect;6b, &sect;7).</li>
+    <li>Change deployment config (Railway/Vercel env vars, <code>CORS_ORIGINS</code>, secrets) without SNA involved. These affect the live, shared deployment for everyone.</li>
+    <li>Anything involving another client's PIN, password, or credentials. Staff auth changes go through the admin flow in the app, not a repo prompt.</li>
+  </ul>
+  <p>None of this is a hard technical lock. Claude Code can be asked to do most of these. It's a &ldquo;don't,&rdquo; to keep a mistake from reaching real client data or the live site without a second set of eyes.</p>
+
+  <h2 id="quick-reference">9. Quick Reference</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Yash wants to...</th>
+          <th>Where he asks</th>
+          <th>What comes back</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Report something broken</td>
+          <td>Claude Code (web or live session)</td>
+          <td>Bug fix PR</td>
+        </tr>
+        <tr>
+          <td>Change how a screen looks/works</td>
+          <td>Claude Code</td>
+          <td>UI-change PR</td>
+        </tr>
+        <tr>
+          <td>Add a new capability</td>
+          <td>Claude Code</td>
+          <td>Scoped plan, then a PR</td>
+        </tr>
+        <tr>
+          <td>Change what data a record <em>type</em> stores</td>
+          <td>Claude Code</td>
+          <td>Backend + frontend PR</td>
+        </tr>
+        <tr>
+          <td>Fix one specific client's/record's data</td>
+          <td>App UI, or ask Harsh/Jash directly</td>
+          <td>Immediate data fix, no PR</td>
+        </tr>
+        <tr>
+          <td>Upload a client document</td>
+          <td>App UI (Visa module)</td>
+          <td>Stored immediately, no PR</td>
+        </tr>
+        <tr>
+          <td>Fix how uploads behave</td>
+          <td>Claude Code</td>
+          <td>Code-change PR</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="doc-footer">Questions about this doc &rarr; Harsh Shah</p>
+</main>
+
+</body>
+</html>
