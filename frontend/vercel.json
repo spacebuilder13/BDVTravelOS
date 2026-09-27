@@ -2,8 +2,10 @@
   "buildCommand": "yarn build",
   "installCommand": "yarn install",
   "outputDirectory": "build",
+  "redirects": [
+    { "source": "/docs", "destination": "/docs/index.html", "permanent": false }
+  ],
   "rewrites": [
-    { "source": "/docs", "destination": "/docs/index.html" },
     { "source": "/docs/:page", "destination": "/docs/:page.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
