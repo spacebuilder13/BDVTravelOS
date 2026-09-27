@@ -1,0 +1,26 @@
+---
+description: PR Lens diagram required before every pull request
+alwaysApply: true
+---
+
+# GitHub workflow — PR Lens
+
+Before opening or updating a pull request, follow `.agents/skills/pr-lens/SKILL.md`
+(Claude Code follows the identical copy at `.claude/skills/pr-lens/SKILL.md`):
+
+- Diff against the merge base, not the tip of `main`.
+- Write `.pr-lens/graph.json`, then run
+  `npx @coldtea/pr-lens-cli@latest validate .pr-lens/graph.json`, then
+  `npx @coldtea/pr-lens-cli@latest render .pr-lens/graph.json --theme light`.
+- Show the rendered diagrams and say in a few lines what they show before
+  opening or updating the pull request — wait for confirmation first.
+- Pull request body: one sentence on why, then the architecture diagram.
+  Add a data-flow diagram only when there is a sequence worth walking
+  through. Attach with `gh pr create` or `gh pr edit --attach`.
+- Do not commit `.pr-lens/` — the CLI already adds it to `.gitignore`.
+  Corrections to a diagram go in `.github/pr-lens.yml`, never in the
+  generated SVGs.
+
+Claude Code follows the same rule via `CLAUDE.md`. If you edit the skill
+itself, keep `.claude/skills/pr-lens` and `.agents/skills/pr-lens`
+identical — they're separate copies, one per agent, not linked.
