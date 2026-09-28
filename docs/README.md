@@ -140,7 +140,7 @@ SNA is the outside team helping BDV execute this migration; the BDV-side names a
 
 **Live Vercel project (`bdv-travel-os`):** no custom domain attached, Vercel Authentication (SSO) on for all deployments except custom domains, no framework auto-detected, and the project isn't marked live - consistent with `/prod` not having this application's code pushed to it yet. Confirmed: `/prod` stays on the current `vercel.app` URL, no custom domain planned for go-live.
 
-> ⚠️ **Worth flagging:** `JWT_SECRET` has a hardcoded fallback (`'bdvv-secret-key-2024'`) if the env var isn't set on the host - worth confirming the real Railway environment actually overrides this rather than running on the default.
+> ⚠️ **Worth flagging:** `JWT_SECRET` is required at startup. Railway already has a long random value; a missing or empty variable makes the backend refuse to boot.
 
 ---
 
