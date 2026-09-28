@@ -31,3 +31,6 @@ venv/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# PR Lens renders. Regenerated from the diff; do not commit.
+.pr-lens

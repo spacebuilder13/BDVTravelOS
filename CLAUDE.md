@@ -34,3 +34,11 @@ On startup against an empty database, `seed_database()` and `seed_protected_admi
 - **Database is MongoDB, not Postgres.** The original brief calls for an eventual Supabase (Postgres) migration — that has **not** happened yet. This is a deliberate, larger follow-up project (rewriting the data layer across `server.py`), not something to do incidentally while fixing a UI bug.
 - No demo/prod environment separation yet — there is currently one deployment. Splitting this out (e.g. separate Railway/Vercel environments with separate Mongo databases) is part of the same later phase as the Supabase migration.
 - File uploads are local-disk based, not object storage (S3/Supabase Storage) — fine for now given the Railway volume, but worth revisiting if the app needs to run on a platform without persistent disks.
+
+## Pull request diagrams (PR Lens)
+
+`main` is production. Never push or merge to it. One task per branch, named `harsh/<slug>`. A merge needs one approving review from someone other than the author.
+
+- **Every pull request carries a PR Lens diagram.** Before opening or updating a PR, follow `.claude/skills/pr-lens/SKILL.md`. Diff against the merge base (not the tip of `main`), write `.pr-lens/graph.json`, validate it, render it, and put the architecture diagram at the top of the PR body. Add a data-flow diagram only when the change has a sequence. Show the rendered diagrams and how they match the plan, and wait for confirmation before opening or updating the PR.
+- Do not commit `.pr-lens/`. If a diagram mislabels something, fix it via `.github/pr-lens.yml` (see `.claude/skills/pr-lens/references/config.md`), not by hand-editing the generated JSON or SVGs.
+- Cursor uses the same skill at `.cursor/skills/pr-lens/SKILL.md`. Codex uses `.agents/skills/pr-lens/SKILL.md`. If you update one copy, copy the same change into the other two.
