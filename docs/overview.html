@@ -303,7 +303,7 @@
 <p><strong>No <code>/demo</code> / <code>/prod</code> split in this codebase yet:</strong> as of this writing this repo is still one flat tree (<code>backend/</code>, <code>frontend/</code>), matching <code>CLAUDE.md</code>'s own note: <em>"No demo/prod environment separation yet — there is currently one deployment."</em> The <code>/demo</code> + <code>/prod</code> folder split described in Current Scope is the plan for the next step.</p>
 <p><strong>Live Vercel project (<code>bdv-travel-os</code>):</strong> no custom domain attached, Vercel Authentication (SSO) on for all deployments except custom domains, no framework auto-detected, and the project isn't marked live — consistent with <code>/prod</code> not having this application's code pushed to it yet. Confirmed: <code>/prod</code> stays on the current <code>vercel.app</code> URL, no custom domain planned for go-live.</p>
 <blockquote>
-<p>⚠️ <strong>Worth flagging:</strong> <code>JWT_SECRET</code> has a hardcoded fallback (<code>'bdvv-secret-key-2024'</code>) if the env var isn't set on the host — worth confirming the real Railway environment actually overrides this rather than running on the default.</p>
+<p>⚠️ <strong>Worth flagging:</strong> <code>JWT_SECRET</code> is required at startup. Railway already has a long random value; a missing or empty variable makes the backend refuse to boot.</p>
 </blockquote>
 <hr />
 <h2>⚙️ How the OS Works</h2>
