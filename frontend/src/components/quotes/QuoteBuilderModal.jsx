@@ -28,6 +28,7 @@ import { VisaOtherTab } from './VisaOtherTab';
 import { PackageCostModal } from './PackageCostModal';
 import { ScreenshotUpload } from '../common/ScreenshotUpload';
 import { DocumentViewer } from './DocumentViewer';
+import { quoteTotals } from '../../utils/quoteTotals';
 import { bulkSaveROE } from '../../utils/roeStorage';
 import { ClientDocumentsPanel } from '../crm/ClientDocumentsPanel';
 
@@ -652,30 +653,9 @@ export function QuoteBuilderModal({ open, onClose, editQuote, onSaved, initFromL
   const updateItem = (id, updatedItem) => setForm(prev => ({ ...prev, items: prev.items.map(i => i.id === id ? updatedItem : i) }));
   const removeItem = (id) => setForm(prev => ({ ...prev, items: prev.items.filter(i => i.id !== id) }));
 
-  const totals = useMemo(() => {
-    const byCategory = {};
-    let operatingCost = 0;
-    form.items.forEach(item => {
-      const qty = parseFloat(item.qty) || 0;
-      const up = parseFloat(item.unit_price) || 0;
-      const roe = parseFloat(item.roe_to_base) || 1;
-      const amtBase = qty * up * roe;
-      operatingCost += amtBase;
-      const cat = item.category || 'Misc';
-      byCategory[cat] = (byCategory[cat] || 0) + amtBase;
-    });
-    const markupType = form.markup_type || 'percentage';
-    const markupValue = parseFloat(form.markup_value) || 0;
-    const markupAmount = markupType === 'percentage' ? operatingCost * markupValue / 100 : markupValue;
-    const subtotal = operatingCost + markupAmount;
-    const gstRate = parseFloat(form.gst_rate) || 0;
-    const gstAmount = subtotal * gstRate / 100;
-    const tcsEnabled = form.tcs_enabled || false;
-    const tcsRate = parseFloat(form.tcs_rate) || 0;
-    const tcsAmount = tcsEnabled ? (subtotal + gstAmount) * tcsRate / 100 : 0;
-    const grandTotal = subtotal + gstAmount + tcsAmount;
-    return { operatingCost, byCategory, markupAmount, subtotal, gstAmount, tcsAmount, grandTotal };
-  }, [form.items, form.markup_type, form.markup_value, form.gst_rate, form.tcs_enabled, form.tcs_rate]);
+  const totals = useMemo(() => quoteTotals(form.items, form), [
+    form.items, form,
+  ]);
 
   const tabCount = (cats) => {
     if (!cats.length) return null;

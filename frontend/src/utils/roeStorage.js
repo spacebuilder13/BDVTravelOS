@@ -26,26 +26,31 @@ const DEFAULT_ROE = {
  */
 export function getROE(fromCurrency, baseCurrency = 'INR') {
   if (!fromCurrency || fromCurrency === baseCurrency) return 1.0;
+
+  // A corrupt cache must fall through to the presets, not turn every rate into 1.
+  let cache = {};
   try {
-    const cache = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    const key = `${fromCurrency}_${baseCurrency}`;
-    if (cache[key]) return parseFloat(cache[key]);
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (parsed && typeof parsed === 'object') cache = parsed;
+  } catch { /* ignore — preset lookup still runs */ }
 
-    // Direct preset (X → INR)
-    if (baseCurrency === 'INR' && DEFAULT_ROE[fromCurrency]) {
-      return DEFAULT_ROE[fromCurrency];
-    }
+  const key = `${fromCurrency}_${baseCurrency}`;
+  if (cache[key]) return parseFloat(cache[key]);
 
-    // Cross-rate via INR: from→INR / base→INR
-    if (DEFAULT_ROE[fromCurrency] && DEFAULT_ROE[baseCurrency]) {
-      return parseFloat((DEFAULT_ROE[fromCurrency] / DEFAULT_ROE[baseCurrency]).toFixed(6));
-    }
+  // Direct preset (X → INR)
+  if (baseCurrency === 'INR' && DEFAULT_ROE[fromCurrency]) {
+    return DEFAULT_ROE[fromCurrency];
+  }
 
-    // Reverse: if we know base→INR and from is INR
-    if (fromCurrency === 'INR' && DEFAULT_ROE[baseCurrency]) {
-      return parseFloat((1 / DEFAULT_ROE[baseCurrency]).toFixed(6));
-    }
-  } catch { /* ignore — ROE lookup is best-effort */ }
+  // Cross-rate via INR: from→INR / base→INR
+  if (DEFAULT_ROE[fromCurrency] && DEFAULT_ROE[baseCurrency]) {
+    return parseFloat((DEFAULT_ROE[fromCurrency] / DEFAULT_ROE[baseCurrency]).toFixed(6));
+  }
+
+  // Reverse: if we know base→INR and from is INR
+  if (fromCurrency === 'INR' && DEFAULT_ROE[baseCurrency]) {
+    return parseFloat((1 / DEFAULT_ROE[baseCurrency]).toFixed(6));
+  }
   return 1.0;
 }
 

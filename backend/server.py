@@ -961,6 +961,11 @@ def compute_quote_totals(
     tcs_enabled: bool = False,
 ) -> dict:
     """Compute all quote financial totals.
+
+    Round each line to 2 decimals before applying the exchange rate, then
+    round the rate result. A missing quantity defaults to 1. A quantity of
+    0 stays 0. The quote screens follow this same order.
+
     Formula:
       Operating Cost (OC) = sum of (qty × unit_price × roe_to_base) across all items
       Markup   = OC × markup_value% (if percentage) OR flat markup_value (if fixed)
@@ -972,7 +977,7 @@ def compute_quote_totals(
     computed_items = []
     operating_cost = 0.0
     for item_in in items_raw:
-        qty = float(item_in.qty or 1)
+        qty = float(1 if item_in.qty is None else item_in.qty)
         unit_price = float(item_in.unit_price or 0)
         roe = float(item_in.roe_to_base or 1.0)
         amt = round(qty * unit_price, 2)
@@ -4344,28 +4349,11 @@ async def delete_pin(pin_id: str, current_user: dict = Depends(get_current_user)
 
 # ── Validation ─────────────────────────────────────────────────────────────────
 
-@api_router.get("/trips/{trip_id}/validate")
-async def validate_trip(trip_id: str, current_user: dict = Depends(get_current_user)):
-    trip = await db.trips.find_one({"id": trip_id})
-    if not trip: raise HTTPException(404, "Trip not found")
-
-    stops = []
-    async for s in db.trip_stops.find({"trip_id": trip_id}).sort("sequence", 1):
-        s.pop("_id", None)
-        stays = []
-        async for st in db.trip_stays.find({"stop_id": s["id"]}):
-            st.pop("_id", None)
-            stays.append(st)
-        s["stays"] = stays
-        stops.append(s)
-
-    legs = []
-    async for lg in db.trip_legs.find({"trip_id": trip_id}):
-        lg.pop("_id", None)
-        legs.append(lg)
-
+def build_trip_checks(trip: dict, stops: list, legs: list) -> dict:
+    """Pass/fail checklist for a trip. Pure: callers load the documents."""
     checks = []
-    total_allocated = sum(s.get("nights", 0) for s in stops)
+    # A stored null is not a missing key: .get("nights", 0) still returns None.
+    total_allocated = sum((s.get("nights") or 0) for s in stops)
     total_required  = trip.get("total_nights", 0)
 
     # 1. Origin set
@@ -4444,6 +4432,29 @@ async def validate_trip(trip_id: str, current_user: dict = Depends(get_current_u
 
     all_pass = all(c["pass"] for c in checks)
     return {"valid": all_pass, "checks": checks}
+
+
+@api_router.get("/trips/{trip_id}/validate")
+async def validate_trip(trip_id: str, current_user: dict = Depends(get_current_user)):
+    trip = await db.trips.find_one({"id": trip_id})
+    if not trip: raise HTTPException(404, "Trip not found")
+
+    stops = []
+    async for s in db.trip_stops.find({"trip_id": trip_id}).sort("sequence", 1):
+        s.pop("_id", None)
+        stays = []
+        async for st in db.trip_stays.find({"stop_id": s["id"]}):
+            st.pop("_id", None)
+            stays.append(st)
+        s["stays"] = stays
+        stops.append(s)
+
+    legs = []
+    async for lg in db.trip_legs.find({"trip_id": trip_id}):
+        lg.pop("_id", None)
+        legs.append(lg)
+
+    return build_trip_checks(trip, stops, legs)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TRIP-PLANNER v2 — Places, TripComponents, TaxProfiles, QuoteTerms

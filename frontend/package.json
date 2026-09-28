@@ -77,7 +77,8 @@
     "start": "craco start",
     "prebuild": "node scripts/copy-docs.js",
     "build": "craco build",
-    "test": "craco test"
+    "test": "craco test",
+    "lint:utils": "eslint src/utils"
   },
   "browserslist": {
     "production": [
