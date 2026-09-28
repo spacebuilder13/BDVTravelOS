@@ -2,16 +2,16 @@
 
 Internal operations platform for Blue Diamond Voyage & Vision (BDV) — a travel agency. Covers lead intake, quotations, itinerary planning, visa document tracking, and a CRM, built for BDV's staff to run day-to-day agency operations.
 
-Originally prototyped on [Emergent](https://emergent.sh); this repo is the migrated, standalone version meant to be run and extended on GitHub/Vercel/Railway with Claude Code.
+Originally prototyped on [Emergent](https://emergent.sh); this repo is the migrated, standalone version meant to be run and extended on GitHub/Vercel/Railway.
 
 ## Stack
 
 - **Frontend**: React 19 (Create React App via [craco](https://craco.js.org/)), Tailwind CSS, shadcn/Radix UI — deployed on [Vercel](https://vercel.com)
 - **Backend**: FastAPI (single app in `backend/server.py`) — deployed on [Railway](https://railway.app)
 - **Database**: MongoDB (via Motor) — hosted as a Railway service
-- **AI features**: Anthropic Claude via the `emergentintegrations` LlmChat wrapper
+- **AI features**: Anthropic Claude via a local `LlmChat` shim in `backend/server.py`
 
-See [`CLAUDE.md`](./CLAUDE.md) for the full architecture rundown, module map, and how to make changes going forward.
+See [`AGENTS.md`](./AGENTS.md) for the working contract. [`CLAUDE.md`](./CLAUDE.md) imports that file for Claude Code.
 
 ## Modules
 
