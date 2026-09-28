@@ -15,4 +15,4 @@ alwaysApply: true
   - Show the diagrams and say in a few lines how they match or miss the agreed plan. Wait for confirmation before opening or updating the pull request.
 - Pull request body: one sentence on why, then the architecture diagram. Add a data-flow diagram only when there is a sequence. Attach with `gh pr create` or `gh pr edit --attach`.
 - Do not commit `.pr-lens/`. Corrections go in `.github/pr-lens.yml`, not in generated SVGs.
-- Claude Code follows `CLAUDE.md` and `.claude/skills/pr-lens/SKILL.md`. Codex follows `AGENTS.md` and `.agents/skills/pr-lens/SKILL.md`. Keep those two copies identical to `.cursor/skills/pr-lens/`.
+- The shared contract is `AGENTS.md`. `CLAUDE.md` only imports it. Claude Code loads `.claude/skills/pr-lens/SKILL.md`. Codex loads `.agents/skills/pr-lens/SKILL.md`. Keep those copies identical to `.cursor/skills/pr-lens/`.
