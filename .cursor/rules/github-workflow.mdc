@@ -1,0 +1,18 @@
+---
+description: Branch-only GitHub flow with PR Lens diagrams before every pull request
+alwaysApply: true
+---
+
+# GitHub workflow
+
+`main` is production. A merge is the only path onto it, and it needs one approving review from someone other than the author.
+
+- Start from latest `main`. One task per branch. Cursor: `utsav/<slug>`. Claude Code: `harsh/<slug>`. Codex: `codex/<slug>`.
+- Never push or merge to `main`.
+- Before a push that should be reviewed, follow `.cursor/skills/pr-lens/SKILL.md`:
+  - Diff against the merge base, not the tip of `main`.
+  - Write `.pr-lens/graph.json`, then run `npx @coldtea/pr-lens-cli@latest validate .pr-lens/graph.json`, then `npx @coldtea/pr-lens-cli@latest render .pr-lens/graph.json --theme light`.
+  - Show the diagrams and say in a few lines how they match or miss the agreed plan. Wait for confirmation before opening or updating the pull request.
+- Pull request body: one sentence on why, then the architecture diagram. Add a data-flow diagram only when there is a sequence. Attach with `gh pr create` or `gh pr edit --attach`.
+- Do not commit `.pr-lens/`. Corrections go in `.github/pr-lens.yml`, not in generated SVGs.
+- The shared contract is `AGENTS.md`. `CLAUDE.md` only imports it. Claude Code loads `.claude/skills/pr-lens/SKILL.md`. Codex loads `.agents/skills/pr-lens/SKILL.md`. Keep those copies identical to `.cursor/skills/pr-lens/`.

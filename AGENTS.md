@@ -11,6 +11,26 @@ Do not commit secrets, `.env` files, or new files under `backend/uploads/`. Ther
 
 One kind of change per pull request. Use the PR template. Note deploy impact for Vercel, Railway, and env vars, and say so if routing, auth, data shape, or deploy topology changed.
 
+## Pull request diagrams (PR Lens)
+
+`main` is production. Never push or merge to it. One task per branch: `utsav/<slug>` on Cursor, `harsh/<slug>` in Claude Code, `codex/<slug>` in Codex. A merge needs one approving review from someone other than the author.
+
+Every pull request carries a PR Lens diagram. Before opening or updating a PR:
+
+- Diff against the merge base, not the tip of `main`.
+- Write `.pr-lens/graph.json`, validate it, and render it with the light theme.
+- Put the architecture diagram at the top of the PR body. Add a data-flow diagram only when the change has a sequence.
+- Show the diagrams and how they match the plan, and wait for a person before you open or update the PR.
+- Do not commit `.pr-lens/`. Corrections go in `.github/pr-lens.yml`.
+
+Load the skill from the folder for the agent you are:
+
+- Cursor: `.cursor/skills/pr-lens/SKILL.md`
+- Claude Code: `.claude/skills/pr-lens/SKILL.md`
+- Codex: `.agents/skills/pr-lens/SKILL.md`
+
+The three copies are identical. If you change one, change the other two.
+
 ## Architecture
 
 - `backend/server.py` — the entire FastAPI backend lives in this one file (~5,700 lines). All routes are under `/api` via `api_router`. There is no `models/`, `routes/`, or `services/` split — when adding features, follow the existing pattern of grouping related endpoints together in the file rather than introducing a new module structure, unless asked to refactor.
