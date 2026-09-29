@@ -1,8 +1,4 @@
 // Test IDs for BDV TravelOS
-export const HOME = {
-  emergentLink: 'home-emergent-link'
-};
-
 export const LOGIN = {
   staffCard: (id) => `login-staff-card-${id}`,
   pinInput: 'login-pin-input',

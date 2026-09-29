@@ -2323,11 +2323,10 @@ def _user_message_to_anthropic_content(message: "UserMessage"):
 
 
 class LlmChat:
-    """Minimal LlmChat-compatible wrapper around the Anthropic SDK.
+    """Minimal chat wrapper around the Anthropic SDK.
 
-    Replaces Emergent's `emergentintegrations` package (pulled from PyPI and
-    no longer installable outside the Emergent platform) with a direct call
-    to Anthropic, using this app's own ANTHROPIC-compatible key.
+    Sends this app's own API key straight to Anthropic. Call sites keep the
+    same with_model / send_message / stream_message shape.
     """
 
     def __init__(self, api_key, session_id=None, system_message="", initial_messages=None):
