@@ -18,17 +18,28 @@ import re
 import subprocess
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 
 MARKDOWN_IMAGE = re.compile(r"!\[[^\]]*\]\((https?://[^)\s]+)\)")
 ARTIFACT_LINK = re.compile(r"cursor\.com/agents/[^)\s]*artifacts", re.I)
 FOOTER_CHROME = "cursor.com/assets/images/open-in-"
+FENCED_CODE = re.compile(r"```.*?```", re.S)
+INLINE_CODE = re.compile(r"`[^`\n]*`")
+
+
+def prose(body: str) -> str:
+    """Drop code spans so an example in the description is not treated as a diagram."""
+    return INLINE_CODE.sub("", FENCED_CODE.sub("", body))
 
 
 def qualifying_images(body: str) -> list[str]:
     urls = []
-    for url in MARKDOWN_IMAGE.findall(body):
+    for url in MARKDOWN_IMAGE.findall(prose(body)):
         if FOOTER_CHROME in url:
+            continue
+        host = urllib.parse.urlparse(url).hostname or ""
+        if "." not in host or not re.search(r"[A-Za-z]", host):
             continue
         urls.append(url)
     return urls
@@ -36,7 +47,7 @@ def qualifying_images(body: str) -> list[str]:
 
 def problems(body: str) -> list[str]:
     found = []
-    if ARTIFACT_LINK.search(body):
+    if ARTIFACT_LINK.search(prose(body)):
         found.append(
             "body links a Cursor agent artifact page; GitHub shows that as a caption, not a picture"
         )
@@ -102,11 +113,13 @@ def self_test() -> int:
         "![Architecture after this change](https://raw.githubusercontent.com/example/repo/abc/diagram.png)\n"
     )
     footer = good + '<img alt="Open in Web" src="https://cursor.com/assets/images/open-in-web-dark.png">\n'
+    example_in_prose = good + "The body needs a Markdown image `![caption](https://...)`.\n"
     cases = [
         ("artifact link", bad_link, True),
         ("html img only", html_only, True),
         ("markdown image", good, False),
         ("footer chrome ignored", footer, False),
+        ("placeholder in code ignored", example_in_prose, False),
     ]
     failed = False
     for name, body, should_fail in cases:
