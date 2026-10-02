@@ -2,13 +2,13 @@
 
 # BDVTravelOS - Engineering Overview
 
-**Internal operations platform for BDV** · migrating from a single-repo Emergent build to a modern GitHub → Vercel → Supabase stack
+**Internal operations platform for BDV** · migrating from the original single-repo build to a modern GitHub → Vercel → Supabase stack
 
 ![Status](https://img.shields.io/badge/status-Phase%201%20migration-yellow)
 ![Frontend](https://img.shields.io/badge/frontend-React%20%2F%20Vercel-blue)
 ![Backend](https://img.shields.io/badge/backend-FastAPI%20%2F%20Railway-009688)
 ![Database](https://img.shields.io/badge/database-MongoDB%20→%20Supabase-47A248)
-![Access](https://img.shields.io/badge/visibility-private-lightgrey)
+![Access](https://img.shields.io/badge/docs-public%20by%20link-lightgrey)
 
 Prepared by Harsh Shah (SNA) · last updated Sep 24, 2026
 
@@ -50,12 +50,12 @@ Every claim below is either **confirmed** (pulled directly from this repo's code
 
 ## 🎯 Current Scope
 
-BDVTravelOS is being migrated off its original Emergent-built stack onto a new stack: a private GitHub repository, Vercel for deployment, and Supabase for the database.
+BDVTravelOS is being migrated off its original stack onto a new stack: a private GitHub repository, Vercel for deployment, and Supabase for the database.
 
 **Migration approach**
 
-1. The full Emergent-era repo was copy-pasted as-is into a new private GitHub repo (done).
-2. That new repo will hold two top-level folders: `/demo` (the untouched Emergent copy, kept as reference/rollback - not deployed) and `/prod` (where the real migration work happens, module by module - this is what deploys live on the Vercel link).
+1. The full original repo was copy-pasted as-is into a new private GitHub repo (done).
+2. That new repo will hold two top-level folders: `/demo` (the untouched original copy, kept as reference/rollback - not deployed) and `/prod` (where the real migration work happens, module by module - this is what deploys live on the Vercel link).
 
 **Phase 1 — three modules move into `/prod`:**
 
@@ -150,11 +150,11 @@ SNA is the outside team helping BDV execute this migration; the BDV-side names a
 
 BDVTravelOS is BDV's internal operations tool: staff log in, see a Dashboard, manage travel inquiries and quotations in the Trip Planner, and track customer visas and documents in the CRM. A person fills out or updates something in the browser; that action goes to a backend service, which stores it and, in places, calls an AI (Claude) to help draft or process content; the result comes back to the browser.
 
-This description reflects the original Emergent-built version of the app (now the `/demo` copy). The new `/prod` version, covering only Dashboard, CRM, and Trip Planner for Phase 1, has not yet been built - its high-level flow should match this pattern but needs confirming once that code exists.
+This description reflects the original version of the app (now the `/demo` copy). The new `/prod` version, covering only Dashboard, CRM, and Trip Planner for Phase 1, has not yet been built - its high-level flow should match this pattern but needs confirming once that code exists.
 
 ### Low Level
 
-**As inspected in the `/demo` (original Emergent) codebase:**
+**As inspected in the `/demo` (original) codebase:**
 
 - Frontend: React app, deployed on Vercel.
 - Backend: FastAPI service, deployed on Railway (a `Procfile` drives that deployment).
@@ -184,7 +184,7 @@ Generated via [Archify](https://github.com/tt-a1i/archify) in Claude Code, run d
 | 6 | API Map | All 154 routes grouped by feature, admin-only vs. open-to-any-staff marked | [`api-map.html`](./api-map.html) |
 | 7 | Inquiry to Quotation (sequence) | One end-to-end user flow, call by call | [`flow-booking.html`](./flow-booking.html) |
 | 8 | Frontend Component Map | Pages, per-page API services, shared contexts | [`components.html`](./components.html) |
-| 9 | Phase 1 Migration Map | Dashboard / CRM / Trip Planner scoped against the full Emergent-era app | [`migration-map.html`](./migration-map.html) |
+| 9 | Phase 1 Migration Map | Dashboard / CRM / Trip Planner scoped against the full original app | [`migration-map.html`](./migration-map.html) |
 
 **Suggested walkthrough order for onboarding Jash:**
 

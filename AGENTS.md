@@ -15,6 +15,8 @@ One kind of change per pull request. Use the PR template. Note deploy impact for
 
 `main` is production. Never push or merge to it. One task per branch: `utsav/<slug>` on Cursor, `harsh/<slug>` in Claude Code, `codex/<slug>` in Codex. A merge needs one approving review from someone other than the author.
 
+If a pull request changes architecture, routing, auth, data shape, deploy topology, or env vars, update the matching `docs/` page in the same pull request (regenerate the diagram pages from `docs/specs/`).
+
 Every pull request carries a PR Lens diagram. Before opening or updating a PR:
 
 - Diff against the merge base, not the tip of `main`.
@@ -36,6 +38,7 @@ The three copies are identical. If you change one, change the other two.
 - `backend/server.py` — the entire FastAPI backend lives in this one file (~5,700 lines). All routes are under `/api` via `api_router`. There is no `models/`, `routes/`, or `services/` split — when adding features, follow the existing pattern of grouping related endpoints together in the file rather than introducing a new module structure, unless asked to refactor.
 - `frontend/src/pages/*` — one file per top-level screen, routed in `frontend/src/App.js`. Key pages: `CRM.jsx` (Inquiry & Intake), `Quotations.jsx` (Quotation & Calculator), `Visa.jsx` (Visa Documents), plus `TripPlanner`/`PlannerCanvas`/`ItineraryDesigner`, `Transport`, `Maps`, `Browser`, `CompassHub`/`AIAssistant`.
 - `frontend/src/services/*API.js` — thin axios wrappers per domain; all API calls go through `REACT_APP_BACKEND_URL`.
+- `docs/` — standalone architecture docs, separate from the app. `frontend/scripts/copy-docs.js` (the `prebuild` step) copies `docs/*.html` into `frontend/public/docs/` (gitignored) and `frontend/vercel.json` serves them at `/docs`. Open to anyone with the link; the app itself is login-gated. Nothing in `frontend/src` or `backend/` reads them. `docs/architecture.html` and `docs/deployment.html` are generated from `docs/specs/*.json` with Archify (see `docs/specs/README.md`); change the spec and regenerate, never hand-edit them.
 - Auth: staff log in with a name + 4-digit PIN (not email/password). JWT issued on login, stored as an httpOnly cookie (`bdvv_token`) with a Bearer-header fallback. See `get_current_user` in `server.py`.
 - Database: MongoDB via Motor (`db = client[DB_NAME]`), collections are plain dicts, no ORM/schema layer.
 - File uploads (enquiry PDFs, itinerary images) are written to local disk under `backend/uploads/`. This requires the backend host to have a **persistent volume** — on Railway that's a mounted volume on the backend service. If uploads ever start disappearing after a deploy, check the volume mount first.
