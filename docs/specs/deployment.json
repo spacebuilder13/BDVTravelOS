@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BDV Travel OS — Deployment Topology",
+    "output": "deployment.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "staff_browser",
+      "type": "external",
+      "label": "Staff Browser",
+      "sublabel": "PIN login staff client",
+      "pos": [
+        30,
+        260
+      ],
+      "size": [
+        160,
+        68
+      ]
+    },
+    {
+      "id": "vercel",
+      "type": "frontend",
+      "label": "Vercel",
+      "sublabel": "frontend/ · craco build",
+      "pos": [
+        280,
+        90
+      ],
+      "size": [
+        230,
+        80
+      ],
+      "tag": "REACT_APP_BACKEND_URL, REACT_APP_CARTO_API_KEY"
+    },
+    {
+      "id": "railway_backend",
+      "type": "backend",
+      "label": "Railway Backend",
+      "sublabel": "FastAPI · uvicorn server:app",
+      "pos": [
+        570,
+        260
+      ],
+      "size": [
+        280,
+        84
+      ],
+      "tag": "MONGO_URL, DB_NAME, JWT_SECRET, CORS_ORIGINS, LLM_API_KEY"
+    },
+    {
+      "id": "mongodb",
+      "type": "database",
+      "label": "MongoDB",
+      "sublabel": "Motor driver",
+      "pos": [
+        930,
+        130
+      ],
+      "size": [
+        150,
+        68
+      ]
+    },
+    {
+      "id": "volume",
+      "type": "cloud",
+      "label": "Persistent Volume",
+      "sublabel": "backend/uploads/",
+      "pos": [
+        930,
+        380
+      ],
+      "size": [
+        150,
+        68
+      ]
+    },
+    {
+      "id": "anthropic",
+      "type": "external",
+      "label": "Anthropic API",
+      "sublabel": "claude-sonnet-5",
+      "pos": [
+        1160,
+        260
+      ],
+      "size": [
+        150,
+        68
+      ]
+    },
+    {
+      "id": "future_env",
+      "type": "cloud",
+      "label": "/prod split",
+      "sublabel": "planned: separate Railway+Vercel+Mongo",
+      "pos": [
+        605,
+        500
+      ],
+      "size": [
+        230,
+        76
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Railway project",
+      "wraps": [
+        "railway_backend",
+        "mongodb",
+        "volume",
+        "future_env"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "browser-loads-app",
+      "from": "staff_browser",
+      "to": "vercel",
+      "label": "loads app shell + static assets (HTTPS)"
+    },
+    {
+      "id": "browser-calls-api",
+      "from": "staff_browser",
+      "to": "railway_backend",
+      "label": "REST /api/* — cross-domain cookie + Bearer auth",
+      "variant": "emphasis"
+    },
+    {
+      "id": "backend-mongo",
+      "from": "railway_backend",
+      "to": "mongodb",
+      "label": "MONGO_URL / DB_NAME"
+    },
+    {
+      "id": "backend-volume",
+      "from": "railway_backend",
+      "to": "volume",
+      "label": "uploads (local disk)"
+    },
+    {
+      "id": "backend-anthropic",
+      "from": "railway_backend",
+      "to": "anthropic",
+      "label": "LLM_API_KEY → Compass AI + itinerary AI",
+      "variant": "dashed"
+    },
+    {
+      "id": "backend-future",
+      "from": "railway_backend",
+      "to": "future_env",
+      "label": "needs own CORS_ORIGINS + Mongo per env",
+      "variant": "dashed",
+      "fromSide": "bottom",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Cross-domain auth",
+      "items": [
+        "bdvv_token cookie needs samesite=\"none\"; secure=True — Vercel and Railway are different domains",
+        "get_current_user tries Authorization: Bearer first, then the cookie — fixed a same-site logout bug",
+        "CORS_ORIGINS must be updated whenever the Vercel URL changes, or requests get blocked"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Anthropic call sites",
+      "items": [
+        "compass_chat, link-extraction, ai_generate_itinerary — all via a local LlmChat shim, model claude-sonnet-5",
+        "The shim calls the anthropic SDK directly with LLM_API_KEY"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "/prod split — planned, not built",
+      "items": [
+        "One deployment today; no demo/prod separation",
+        "Next: separate Railway + Vercel envs, each with its own Mongo + CORS_ORIGINS",
+        "Distinct from the also-pending Postgres/Supabase migration"
+      ]
+    }
+  ]
+}

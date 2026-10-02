@@ -61,13 +61,13 @@
 <main>
   <div class="doc-header">
     <h1>Engineering Overview</h1>
-    <p class="tagline">Internal operations platform for BDV &middot; migrating from a single-repo Emergent build to a modern GitHub &rarr; Vercel &rarr; Supabase stack</p>
+    <p class="tagline">Internal operations platform for BDV &middot; migrating from the original single-repo build to a modern GitHub &rarr; Vercel &rarr; Supabase stack</p>
     <div class="badges">
       <img src="https://img.shields.io/badge/status-Phase%201%20migration-yellow" alt="Status: Phase 1 migration">
       <img src="https://img.shields.io/badge/frontend-React%20%2F%20Vercel-blue" alt="Frontend: React / Vercel">
       <img src="https://img.shields.io/badge/backend-FastAPI%20%2F%20Railway-009688" alt="Backend: FastAPI / Railway">
       <img src="https://img.shields.io/badge/database-MongoDB%20%E2%86%92%20Supabase-47A248" alt="Database: MongoDB to Supabase">
-      <img src="https://img.shields.io/badge/visibility-private-lightgrey" alt="Visibility: private">
+      <img src="https://img.shields.io/badge/docs-public%20by%20link-lightgrey" alt="Docs: public by link">
     </div>
     <p class="byline">Prepared by Harsh Shah (SNA) &middot; last updated Sep 24, 2026</p>
   </div>
@@ -130,11 +130,11 @@
 </table>
 <hr />
 <h2>🎯 Current Scope</h2>
-<p>BDVTravelOS is being migrated off its original Emergent-built stack onto a new stack: a private GitHub repository, Vercel for deployment, and Supabase for the database.</p>
+<p>BDVTravelOS is being migrated off its original stack onto a new stack: a private GitHub repository, Vercel for deployment, and Supabase for the database.</p>
 <p><strong>Migration approach</strong></p>
 <ol>
-<li>The full Emergent-era repo was copy-pasted as-is into a new private GitHub repo (done).</li>
-<li>That new repo will hold two top-level folders: <code>/demo</code> (the untouched Emergent copy, kept as reference/rollback — not deployed) and <code>/prod</code> (where the real migration work happens, module by module — this is what deploys live on the Vercel link).</li>
+<li>The full original repo was copy-pasted as-is into a new private GitHub repo (done).</li>
+<li>That new repo will hold two top-level folders: <code>/demo</code> (the untouched original copy, kept as reference/rollback — not deployed) and <code>/prod</code> (where the real migration work happens, module by module — this is what deploys live on the Vercel link).</li>
 </ol>
 <p><strong>Phase 1 — three modules move into <code>/prod</code>:</strong></p>
 <ul>
@@ -309,9 +309,9 @@
 <h2>⚙️ How the OS Works</h2>
 <h3>High Level</h3>
 <p>BDVTravelOS is BDV's internal operations tool: staff log in, see a Dashboard, manage travel inquiries and quotations in the Trip Planner, and track customer visas and documents in the CRM. A person fills out or updates something in the browser; that action goes to a backend service, which stores it and, in places, calls an AI (Claude) to help draft or process content; the result comes back to the browser.</p>
-<p>This description reflects the original Emergent-built version of the app (now the <code>/demo</code> copy). The new <code>/prod</code> version, covering only Dashboard, CRM, and Trip Planner for Phase 1, has not yet been built — its high-level flow should match this pattern but needs confirming once that code exists.</p>
+<p>This description reflects the original version of the app (now the <code>/demo</code> copy). The new <code>/prod</code> version, covering only Dashboard, CRM, and Trip Planner for Phase 1, has not yet been built — its high-level flow should match this pattern but needs confirming once that code exists.</p>
 <h3>Low Level</h3>
-<p><strong>As inspected in the <code>/demo</code> (original Emergent) codebase:</strong></p>
+<p><strong>As inspected in the <code>/demo</code> (original) codebase:</strong></p>
 <ul>
 <li>Frontend: React app, deployed on Vercel.</li>
 <li>Backend: FastAPI service, deployed on Railway (a <code>Procfile</code> drives that deployment).</li>
@@ -389,7 +389,7 @@
 <tr>
 <td>9</td>
 <td>Phase 1 Migration Map</td>
-<td>Dashboard / CRM / Trip Planner scoped against the full Emergent-era app</td>
+<td>Dashboard / CRM / Trip Planner scoped against the full original app</td>
 <td><a href="./migration-map.html"><code>migration-map.html</code></a></td>
 </tr>
 </tbody>

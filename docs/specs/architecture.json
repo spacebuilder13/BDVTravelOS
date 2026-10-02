@@ -1,0 +1,303 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BDV Travel OS — Runtime Architecture",
+    "output": "architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "primary-request",
+        "label": "Primary request path",
+        "focus": [
+          "browser",
+          "backend",
+          "mongodb",
+          "anthropic"
+        ],
+        "note": "A JWT-authenticated API call reads/writes Mongo, touches uploads, or calls Claude, then returns."
+      },
+      {
+        "id": "trust-boundaries",
+        "label": "Trust boundaries",
+        "focus": [
+          "vercel",
+          "backend",
+          "anthropic"
+        ],
+        "note": "Public frontend, trusted Railway backend, and the external Anthropic API sit in separate trust zones."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "browser",
+      "type": "external",
+      "label": "Staff Browser",
+      "sublabel": "React SPA",
+      "pos": [
+        40,
+        330
+      ],
+      "size": [
+        150,
+        66
+      ]
+    },
+    {
+      "id": "vercel",
+      "type": "cloud",
+      "label": "Vercel",
+      "sublabel": "static build · frontend/",
+      "pos": [
+        300,
+        130
+      ],
+      "size": [
+        160,
+        66
+      ],
+      "tag": "REACT_APP_BACKEND_URL"
+    },
+    {
+      "id": "backend",
+      "type": "backend",
+      "label": "FastAPI Backend",
+      "sublabel": "Railway · server.py",
+      "pos": [
+        560,
+        330
+      ],
+      "size": [
+        170,
+        66
+      ],
+      "tag": "uvicorn via Procfile"
+    },
+    {
+      "id": "mongodb",
+      "type": "database",
+      "label": "MongoDB",
+      "sublabel": "Motor async driver",
+      "pos": [
+        850,
+        190
+      ],
+      "size": [
+        150,
+        66
+      ],
+      "tag": "MONGO_URL"
+    },
+    {
+      "id": "uploads",
+      "type": "cloud",
+      "label": "Uploads Volume",
+      "sublabel": "local disk storage",
+      "pos": [
+        850,
+        400
+      ],
+      "size": [
+        150,
+        66
+      ],
+      "tag": "persistent Railway volume"
+    },
+    {
+      "id": "anthropic",
+      "type": "external",
+      "label": "Anthropic API",
+      "sublabel": "Claude Sonnet 5",
+      "pos": [
+        1110,
+        330
+      ],
+      "size": [
+        160,
+        66
+      ],
+      "tag": "LLM_API_KEY"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Vercel — Public Frontend Tier",
+      "wraps": [
+        "vercel"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Railway Project — Trusted Backend Tier",
+      "wraps": [
+        "backend",
+        "mongodb",
+        "uploads"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "External — Anthropic API (outbound only)",
+      "wraps": [
+        "anthropic"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "browser-loads-spa",
+      "from": "browser",
+      "to": "vercel",
+      "label": "HTTPS — loads static SPA build",
+      "fromSide": "top",
+      "toSide": "left",
+      "via": [
+        [
+          115,
+          306
+        ],
+        [
+          276,
+          306
+        ],
+        [
+          276,
+          163
+        ]
+      ]
+    },
+    {
+      "id": "browser-calls-api",
+      "from": "browser",
+      "to": "backend",
+      "label": "HTTPS axios /api — Bearer token + httpOnly cookie fallback",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left",
+      "via": [
+        [
+          115,
+          420
+        ],
+        [
+          536,
+          420
+        ],
+        [
+          536,
+          363
+        ]
+      ]
+    },
+    {
+      "id": "backend-mongo",
+      "from": "backend",
+      "to": "mongodb",
+      "label": "Motor async reads/writes",
+      "fromSide": "top",
+      "toSide": "left",
+      "via": [
+        [
+          645,
+          306
+        ],
+        [
+          826,
+          306
+        ],
+        [
+          826,
+          223
+        ]
+      ]
+    },
+    {
+      "id": "backend-uploads",
+      "from": "backend",
+      "to": "uploads",
+      "label": "read/write files (/api/uploads/...)",
+      "fromSide": "right",
+      "toSide": "left",
+      "via": [
+        [
+          790,
+          363
+        ],
+        [
+          790,
+          433
+        ]
+      ],
+      "labelAt": [
+        740,
+        468
+      ]
+    },
+    {
+      "id": "backend-anthropic",
+      "from": "backend",
+      "to": "anthropic",
+      "label": "Claude Sonnet 5 via LlmChat shim",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Frontend (Vercel)",
+      "items": [
+        "CRA/craco build, root directory frontend/",
+        "REACT_APP_BACKEND_URL must point at the deployed backend, no trailing slash",
+        "CORS_ORIGINS on Railway must be updated whenever the Vercel URL changes, or the frontend gets CORS errors",
+        "The page shell loads no third-party builder script; the title is \"BDV TravelOS\""
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Auth: cross-domain JWT",
+      "items": [
+        "JWT issued on login, stored as httpOnly cookie bdvv_token",
+        "Bearer header fallback because Vercel + Railway are different domains (third-party cookie issues in Safari / private browsing)",
+        "get_current_user tries the Authorization header first, then falls back to the cookie"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Backend (Railway)",
+      "items": [
+        "Entire API lives in one file, backend/server.py (~5,700 lines)",
+        "All routes mounted under /api via api_router",
+        "Started via uvicorn per backend/Procfile"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Data & file storage",
+      "items": [
+        "MongoDB via Motor — collections are plain dicts, no ORM/schema layer",
+        "Enquiry PDFs and itinerary images written to local disk under backend/uploads/",
+        "Requires a persistent volume mount on the Railway backend service — if uploads disappear after a deploy, check the volume mount first"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Compass AI (Anthropic)",
+      "items": [
+        "Local LlmChat / UserMessage / FileContent shim calls the anthropic SDK directly",
+        "Three call sites: compass_chat, the link-extraction endpoint, and ai_generate_itinerary",
+        "Model ID is claude-sonnet-5"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Known limitations / next phase",
+      "items": [
+        "Database is MongoDB, not Postgres — Supabase migration is a planned but not-yet-started later phase",
+        "No demo/prod environment separation — one deployment, one Mongo database",
+        "Uploads are local-disk, not object storage (S3 / Supabase Storage) — fine while Railway's volume persists"
+      ]
+    }
+  ]
+}
