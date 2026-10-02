@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2132 646" width="2132" height="646" role="img" aria-label="App and docs, kept separate" font-family="-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, &quot;Noto Sans&quot;, Helvetica, Arial, sans-serif">
+<title>App and docs, kept separate</title>
+<desc>The page shell no longer requests the old builder's script, docs diagrams are regenerated from specs, and the build refuses docs that name the old builder. Login and API behavior are unchanged.</desc>
+<defs><pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1" fill="rgba(140,149,159,.5)"/></pattern><marker id="mk-added" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f883d"/></marker><marker id="mko-added" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M2,1 L10,5 L2,9" fill="none" stroke="#1f883d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="mk-modified" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#bf8700"/></marker><marker id="mko-modified" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M2,1 L10,5 L2,9" fill="none" stroke="#bf8700" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="mk-removed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#cf222e"/></marker><marker id="mko-removed" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M2,1 L10,5 L2,9" fill="none" stroke="#cf222e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="mk-neutral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8c959f"/></marker><marker id="mko-neutral" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M2,1 L10,5 L2,9" fill="none" stroke="#8c959f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="0" y="0" width="2132" height="646" rx="12" fill="#f4f5f7"/>
+<rect x="0" y="0" width="2132" height="646" rx="12" fill="url(#dots)"/>
+<g><rect class="lanebox" x="16" y="44" width="404" height="586" rx="12" fill="rgba(255,255,255,.55)"/>
+<text class="lanelabel" x="32" y="68" font-size="10" font-weight="700" letter-spacing=".12em" fill="#59636e">BROWSER · STAFF DEVICE</text>
+<rect class="lanebox" x="440" y="44" width="404" height="586" rx="12" fill="rgba(255,255,255,.55)"/>
+<text class="lanelabel" x="456" y="68" font-size="10" font-weight="700" letter-spacing=".12em" fill="#59636e">VERCEL FRONTEND · FRONTEND/ BUILD</text>
+<rect class="lanebox" x="864" y="44" width="404" height="586" rx="12" fill="rgba(255,255,255,.55)"/>
+<text class="lanelabel" x="880" y="68" font-size="10" font-weight="700" letter-spacing=".12em" fill="#59636e">DOCS (SEPARATE FROM APP) · DOCS/ TO /DOCS</text>
+<rect class="lanebox" x="1288" y="44" width="404" height="586" rx="12" fill="rgba(255,255,255,.55)"/>
+<text class="lanelabel" x="1304" y="68" font-size="10" font-weight="700" letter-spacing=".12em" fill="#59636e">RAILWAY BACKEND · FASTAPI</text>
+<rect class="lanebox" x="1712" y="44" width="404" height="586" rx="12" fill="rgba(255,255,255,.55)"/>
+<text class="lanelabel" x="1728" y="68" font-size="10" font-weight="700" letter-spacing=".12em" fill="#59636e">EXTERNAL</text></g>
+<g><path class="edge edge-neutral context" d="M404,118 L413.67,118 C419.01,118 423.33,122.33 423.33,127.67 L423.33,220.67 C423.33,229.69 430.65,237 439.67,237 L456,237" marker-end="url(#mk-neutral)" fill="none" stroke="#8c959f" stroke-width="1.5" opacity="0.82"/>
+<path class="edge edge-neutral context" d="M594,268 L594,320" marker-end="url(#mk-neutral)" fill="none" stroke="#8c959f" stroke-width="1.5" opacity="0.82"/>
+<path class="glow" stroke="#cf222e" d="M828,237 L831,237 C832.66,237 834,238.34 834,240 L834,488 C834,506.78 849.22,522 868,522 L1684,522 C1698.36,522 1710,533.64 1710,548 L1710,565 C1710,569.97 1714.03,574 1719,574 L1728,574" fill="none" stroke-width="7" opacity="0.14"/>
+<path class="edge edge-removed hero" d="M828,237 L831,237 C832.66,237 834,238.34 834,240 L834,488 C834,506.78 849.22,522 868,522 L1684,522 C1698.36,522 1710,533.64 1710,548 L1710,565 C1710,569.97 1714.03,574 1719,574 L1728,574" marker-end="url(#mk-removed)" fill="none" stroke="#cf222e" stroke-width="2.25" stroke-dasharray="5 4" opacity="0.7"/>
+<path class="edge edge-removed" d="M456,579 L453,579 C451.34,579 450,577.66 450,576 L450,354 C450,352.34 451.34,351 453,351 L456,351" marker-end="url(#mk-removed)" fill="none" stroke="#cf222e" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.7"/>
+<path class="edge edge-neutral context" d="M404,106 L407,106 C408.66,106 410,107.34 410,109 L410,139 C410,157.23 424.77,172 443,172 L1245.5,172 C1263.45,172 1278,186.55 1278,204.5 L1278,224 C1278,231.18 1283.82,237 1291,237 L1304,237" marker-end="url(#mk-neutral)" fill="none" stroke="#8c959f" stroke-width="1.5" opacity="0.82"/>
+<path class="edge edge-neutral context" d="M1490,268 L1490,320" marker-end="url(#mk-neutral)" fill="none" stroke="#8c959f" stroke-width="1.5" opacity="0.82"/>
+<path class="edge edge-neutral context" d="M1676,351 L1685,351 C1689.97,351 1694,355.03 1694,360 L1694,443 C1694,452.39 1701.61,460 1711,460 L1728,460" marker-end="url(#mk-neutral)" fill="none" stroke="#8c959f" stroke-width="1.5" opacity="0.82"/>
+<path class="glow" stroke="#1f883d" d="M1066,154 L1066,206" fill="none" stroke-width="7" opacity="0.14"/>
+<path class="edge edge-added hero" d="M1066,154 L1066,206" marker-end="url(#mk-added)" fill="none" stroke="#1f883d" stroke-width="2.25"/>
+<path class="edge edge-modified" d="M880,237 L863.67,237 C854.65,237 847.33,244.31 847.33,253.33 L847.33,333.33 C847.33,338.67 843.01,343 837.67,343 L828,343" marker-end="url(#mk-modified)" fill="none" stroke="#bf8700" stroke-width="1.5"/>
+<path class="edge edge-modified" d="M828,359 L844.33,359 C853.35,359 860.67,366.31 860.67,375.33 L860.67,447.33 C860.67,452.67 864.99,457 870.33,457 L880,457" marker-end="url(#mk-modified)" fill="none" stroke="#bf8700" stroke-width="1.5"/>
+<path class="edge edge-neutral context" d="M404,130 L420.33,130 C429.35,130 436.67,137.31 436.67,146.33 L436.67,374 C436.67,392.78 451.89,408 470.67,408 L841.5,408 C859.45,408 874,422.55 874,440.5 L874,470 C874,471.66 875.34,473 877,473 L880,473" marker-end="url(#mk-neutral)" fill="none" stroke="#8c959f" stroke-width="1.5" opacity="0.82"/></g>
+<g><g class="cardsh context" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))" opacity="0.82"><rect class="card" x="32" y="92" width="372" height="52" rx="10" fill="#ffffff" stroke-width="1" stroke="#d1d9e0"/>
+<rect class="chip" x="46" y="105" width="26" height="26" rx="7" fill="#f1f3f5"/><g><rect class="glyph-stroke" x="52" y="112" width="14" height="12" rx="2" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<path class="glyph-stroke" d="M56.5,112 v12" stroke="#59636e" stroke-width="1.4" fill="none"/></g>
+<text class="ntitle" x="82" y="123" font-size="13" font-weight="600" fill="#1f2328">Staff browser</text></g>
+<g class="cardsh" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))"><rect class="card card-modified" x="456" y="206" width="372" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#bf8700" stroke-opacity="0.5"/>
+<rect class="chip" x="470" y="224" width="26" height="26" rx="7" fill="#f1f3f5"/><g><rect class="glyph-stroke" x="476" y="231" width="14" height="12" rx="2" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<path class="glyph-stroke" d="M480.5,231 v12" stroke="#59636e" stroke-width="1.4" fill="none"/></g>
+<text class="ntitle" x="506" y="233" font-size="13" font-weight="600" fill="#1f2328">Page shell</text>
+<text class="nsub" x="506" y="251" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">public/index.html</text>
+<g class="bdg bdg-modified"><rect x="754.38" y="198" width="66.62" height="16" rx="8" fill="#fae17d" stroke="rgba(154,103,0,.55)" stroke-width="1"/><text x="787.69" y="209" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#7d4e00">CHANGED</text></g></g>
+<g class="cardsh context" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))" opacity="0.82"><rect class="card" x="456" y="320" width="180" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#d1d9e0"/>
+<rect class="chip" x="470" y="338" width="26" height="26" rx="7" fill="#f1f3f5"/><g><rect class="glyph-stroke" x="476" y="345" width="14" height="12" rx="2" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<path class="glyph-stroke" d="M476,349 h14" stroke="#59636e" stroke-width="1.4" fill="none"/></g>
+<text class="ntitle" x="506" y="347" font-size="11.5" font-weight="600" fill="#1f2328">React bundle</text>
+<text class="nsub" x="506" y="365" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">login, CRM, quotes</text></g>
+<g class="cardsh" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))"><rect class="card card-modified" x="648" y="320" width="180" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#bf8700" stroke-opacity="0.5"/>
+<rect class="chip" x="662" y="338" width="26" height="26" rx="7" fill="#f1f3f5"/><g><circle class="glyph-stroke" stroke="#59636e" stroke-width="1.4" fill="none" cx="675" cy="351" r="6.5"/>
+<path class="glyph-stroke" d="M675,347.5 V351 H678" stroke="#59636e" stroke-width="1.4" fill="none"/></g>
+<text class="ntitle" x="698" y="347" font-size="11.5" font-weight="600" fill="#1f2328">copy-docs step</text>
+<text class="nsub" x="698" y="365" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">prebuild</text>
+<g class="bdg bdg-modified"><rect x="754.38" y="312" width="66.62" height="16" rx="8" fill="#fae17d" stroke="rgba(154,103,0,.55)" stroke-width="1"/><text x="787.69" y="323" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#7d4e00">CHANGED</text></g></g>
+<g class="cardsh ghost" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))" opacity="0.55"><rect class="card" x="456" y="548" width="372" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#cf222e" stroke-dasharray="4 3" stroke-opacity="0.6"/>
+<rect class="chip" x="470" y="566" width="26" height="26" rx="7" fill="#f1f3f5"/><g><path class="glyph-stroke" d="M476,575 h14" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<path class="glyph-stroke" d="M476,583 h14" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<circle class="glyph" fill="#59636e" cx="481" cy="575" r="2.2"/>
+<circle class="glyph" fill="#59636e" cx="486" cy="583" r="2.2"/></g>
+<text class="ntitle strike" x="506" y="575" font-size="13" font-weight="600" fill="#1f2328" text-decoration="line-through">Dev-only edit hook</text>
+<text class="nsub" x="506" y="593" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">craco.config.js</text>
+<g class="bdg bdg-removed"><rect x="753.88" y="540" width="67.12" height="16" rx="8" fill="#ffcecb" stroke="rgba(207,34,46,.5)" stroke-width="1"/><text x="787.44" y="551" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#a40e26">REMOVED</text></g></g>
+<g class="cardsh" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))"><rect class="card card-added" x="880" y="92" width="372" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#1f883d" stroke-opacity="0.55"/>
+<rect class="chip" x="894" y="110" width="26" height="26" rx="7" fill="#f1f3f5"/><g><path class="glyph-stroke" d="M900,119 h14" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<path class="glyph-stroke" d="M900,127 h14" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<circle class="glyph" fill="#59636e" cx="905" cy="119" r="2.2"/>
+<circle class="glyph" fill="#59636e" cx="910" cy="127" r="2.2"/></g>
+<text class="ntitle" x="930" y="119" font-size="13" font-weight="600" fill="#1f2328">Diagram specs</text>
+<text class="nsub" x="930" y="137" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">docs/specs/*.json</text>
+<g class="bdg bdg-added"><rect x="1204.45" y="84" width="40.55" height="16" rx="8" fill="#b9f0c4" stroke="rgba(31,136,61,.55)" stroke-width="1"/><text x="1224.73" y="95" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#116329">NEW</text></g></g>
+<g class="cardsh" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))"><rect class="card card-modified" x="880" y="206" width="372" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#bf8700" stroke-opacity="0.5"/>
+<rect class="chip" x="894" y="224" width="26" height="26" rx="7" fill="#f1f3f5"/><g><text class="glyph" x="907" y="241.5" text-anchor="middle" fill="#59636e" font-size="11" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">{ }</text></g>
+<text class="ntitle" x="930" y="233" font-size="13" font-weight="600" fill="#1f2328">Docs pages</text>
+<text class="nsub" x="930" y="251" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">docs/*.html</text>
+<g class="bdg bdg-modified"><rect x="1178.38" y="198" width="66.62" height="16" rx="8" fill="#fae17d" stroke="rgba(154,103,0,.55)" stroke-width="1"/><text x="1211.69" y="209" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#7d4e00">CHANGED</text></g></g>
+<g class="cardsh context" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))" opacity="0.82"><rect class="card" x="880" y="434" width="372" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#d1d9e0"/>
+<rect class="chip" x="894" y="452" width="26" height="26" rx="7" fill="#f1f3f5"/><g><text class="glyph" x="907" y="469.5" text-anchor="middle" fill="#59636e" font-size="11" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">{ }</text></g>
+<text class="ntitle" x="930" y="461" font-size="13" font-weight="600" fill="#1f2328">Served /docs</text>
+<text class="nsub" x="930" y="479" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">public/docs (generated)</text></g>
+<g class="cardsh context" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))" opacity="0.82"><rect class="card" x="1304" y="206" width="372" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#d1d9e0"/>
+<rect class="chip" x="1318" y="224" width="26" height="26" rx="7" fill="#f1f3f5"/><g><rect class="glyph-stroke" x="1324.5" y="230.5" width="13" height="13" rx="3" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<circle class="glyph" fill="#59636e" cx="1331" cy="237" r="2"/></g>
+<text class="ntitle" x="1354" y="233" font-size="13" font-weight="600" fill="#1f2328">FastAPI API</text>
+<text class="nsub" x="1354" y="251" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">server.py</text></g>
+<g class="cardsh" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))"><rect class="card card-modified" x="1304" y="320" width="372" height="62" rx="10" fill="#ffffff" stroke-width="1" stroke="#bf8700" stroke-opacity="0.5"/>
+<rect class="chip" x="1318" y="338" width="26" height="26" rx="7" fill="#f1f3f5"/><g><text class="glyph" x="1331" y="355.5" text-anchor="middle" fill="#59636e" font-size="11" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">{ }</text></g>
+<text class="ntitle" x="1354" y="347" font-size="13" font-weight="600" fill="#1f2328">LlmChat shim</text>
+<text class="nsub" x="1354" y="365" font-size="9.5" fill="#59636e" font-family="ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, monospace">docstring only</text>
+<g class="bdg bdg-modified"><rect x="1602.38" y="312" width="66.62" height="16" rx="8" fill="#fae17d" stroke="rgba(154,103,0,.55)" stroke-width="1"/><text x="1635.69" y="323" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#7d4e00">CHANGED</text></g></g>
+<g class="cardsh context" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))" opacity="0.82"><rect class="card" x="1728" y="434" width="372" height="52" rx="10" fill="#ffffff" stroke-width="1" stroke="#d1d9e0"/>
+<rect class="chip" x="1742" y="447" width="26" height="26" rx="7" fill="#f1f3f5"/><g><rect class="glyph-stroke" x="1747" y="454" width="16" height="12" rx="2" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<path class="glyph-stroke" d="M1747,456 l8,6 8,-6" stroke="#59636e" stroke-width="1.4" fill="none"/></g>
+<text class="ntitle" x="1778" y="465" font-size="13" font-weight="600" fill="#1f2328">Anthropic API</text></g>
+<g class="cardsh ghost" filter="drop-shadow(0 1px 2px rgba(31,35,40,.14))" opacity="0.55"><rect class="card" x="1728" y="548" width="372" height="52" rx="10" fill="#ffffff" stroke-width="1" stroke="#cf222e" stroke-dasharray="4 3" stroke-opacity="0.6"/>
+<rect class="chip" x="1742" y="561" width="26" height="26" rx="7" fill="#f1f3f5"/><g><rect class="glyph-stroke" x="1747" y="568" width="16" height="12" rx="2" stroke="#59636e" stroke-width="1.4" fill="none"/>
+<path class="glyph-stroke" d="M1747,570 l8,6 8,-6" stroke="#59636e" stroke-width="1.4" fill="none"/></g>
+<text class="ntitle strike" x="1778" y="579" font-size="13" font-weight="600" fill="#1f2328" text-decoration="line-through">Old builder host</text>
+<g class="bdg bdg-removed"><rect x="2025.88" y="540" width="67.12" height="16" rx="8" fill="#ffcecb" stroke="rgba(207,34,46,.5)" stroke-width="1"/><text x="2059.44" y="551" text-anchor="middle" font-size="8.5" font-weight="700" letter-spacing=".06em" fill="#a40e26">REMOVED</text></g></g></g>
+<g><g><rect class="lpill" x="392.18" y="173" width="42.3" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext" x="413.33" y="184" text-anchor="middle" font-size="9.5" font-weight="600" fill="#59636e">GET /</text></g>
+<g><rect class="lpill" x="557.45" y="286.5" width="73.1" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext" x="594" y="297.5" text-anchor="middle" font-size="9.5" font-weight="600" fill="#59636e">loads bundle</text></g>
+<g><rect class="lpill" x="1237.78" y="514.5" width="76.44" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext ltext-removed" x="1276" y="525.5" text-anchor="middle" font-size="9.5" font-weight="600" fill="#a40e26">script request</text></g>
+<g><rect class="lpill" x="408.7" y="457.5" width="82.6" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext ltext-removed" x="450" y="468.5" text-anchor="middle" font-size="9.5" font-weight="600" fill="#a40e26">dev builds only</text></g>
+<g><rect class="lpill" x="828.14" y="164.5" width="32.23" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext" x="844.25" y="175.5" text-anchor="middle" font-size="9.5" font-weight="600" fill="#59636e">/api</text></g>
+<g><rect class="lpill" x="1670.05" y="394" width="47.9" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext" x="1694" y="405" text-anchor="middle" font-size="9.5" font-weight="600" fill="#59636e">Claude</text></g>
+<g><rect class="lpill" x="1014.35" y="172.5" width="103.31" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext ltext-added" x="1066" y="183.5" text-anchor="middle" font-size="9.5" font-weight="600" fill="#116329">Archify regenerates</text></g>
+<g><rect class="lpill" x="837.33" y="285.83" width="71.42" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext ltext-modified" x="873.04" y="296.83" text-anchor="middle" font-size="9.5" font-weight="600" fill="#7d4e00">read at build</text></g>
+<g><rect class="lpill" x="836.92" y="394" width="67.49" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext ltext-modified" x="870.67" y="405" text-anchor="middle" font-size="9.5" font-weight="600" fill="#7d4e00">copy, or fail</text></g>
+<g><rect class="lpill" x="624.3" y="400.5" width="63.57" height="15" rx="7.5" fill="#ffffff" stroke="#d8dee4" stroke-width="1"/><text class="ltext" x="656.08" y="411.5" text-anchor="middle" font-size="9.5" font-weight="600" fill="#59636e">GET /docs</text></g></g>
+</svg>
