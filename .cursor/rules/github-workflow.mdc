@@ -14,5 +14,6 @@ alwaysApply: true
   - Write `.pr-lens/graph.json`, then run `npx @coldtea/pr-lens-cli@latest validate .pr-lens/graph.json`, then `npx @coldtea/pr-lens-cli@latest render .pr-lens/graph.json --theme light`.
   - Show the diagrams and say in a few lines how they match or miss the agreed plan. Wait for confirmation before opening or updating the pull request.
 - Pull request body: one sentence on why, then the architecture diagram. Add a data-flow diagram only when there is a sequence. Attach with `gh pr create` or `gh pr edit --attach`.
+- After the pull request is saved, run `python3 scripts/check_pr_images.py --pr <number>` and send the link only after it prints `ok`. A saved body that links a Cursor artifact page is not a diagram. If `--attach` reports `unsupported authentication type`, follow the PNG fallback in `.cursor/skills/pr-lens/SKILL.md`.
 - Do not commit `.pr-lens/`. Corrections go in `.github/pr-lens.yml`, not in generated SVGs.
 - The shared contract is `AGENTS.md`. `CLAUDE.md` only imports it. Claude Code loads `.claude/skills/pr-lens/SKILL.md`. Codex loads `.agents/skills/pr-lens/SKILL.md`. Keep those copies identical to `.cursor/skills/pr-lens/`.

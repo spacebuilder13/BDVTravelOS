@@ -73,6 +73,27 @@ How the diagram gets there depends on the forge. Run `git remote get-url origin`
    - The alt text is the caption a reader without images gets. Say what the diagram shows, in one line.
    - `--attach` arrived in GitHub CLI 2.99. Check with `gh --version` before you write a body around it.
 
+   **Prove the picture is on GitHub before asking for review.** A tool that says the pull request was updated is not proof. Read the saved body and run:
+
+   ```bash
+   python3 scripts/check_pr_images.py --pr <number>
+   ```
+
+   Do not send the link until that command prints `ok`. These are failures:
+
+   - The diagram is a Markdown link, `[caption](url)`, or an HTML `<img>`. GitHub shows the caption as text. The body needs `![caption](url)`.
+   - The URL is a Cursor agent artifact page (`cursor.com/agents/.../artifacts`). That page is HTML, and it stays blank unless a Cursor setting is on. Reviewers on github.com do not see the picture.
+   - `gh pr edit --attach` printed `unsupported authentication type`. A GitHub App token (`ghs_`) cannot upload images. Treat `--attach` as unavailable and use the fallback.
+
+   Fallback when `--attach` cannot upload:
+
+   1. Render the light SVG, then write a PNG of the same view. GitHub inlines PNG. It often will not inline SVG.
+   2. Commit the PNG, push, and copy the full commit SHA.
+   3. Put `![caption](https://raw.githubusercontent.com/<owner>/<repo>/<sha>/<path>.png)` in the body. Pin the SHA, not the branch name.
+   4. `curl -sI` that URL and require `200` and `content-type: image/png`.
+   5. Delete the PNG from the branch tree in a following commit so the merge diff does not carry the binary. The SHA URL keeps serving the blob.
+   6. Do not commit `.pr-lens/`.
+
    Attach the views a reviewer needs and leave the rest in `.pr-lens/`: the top architecture view first, then a data flow if the change has a sequence worth following. A body with four diagrams reads worse than one with two, except the four are really needed to understand the change e.g., in the case of a complex feature or refactor.
 
    **GitLab.** Nothing uploads the file with the description for you, so upload each SVG to the project first. The response includes the Markdown to paste into the description:
@@ -191,7 +212,7 @@ After `answer`, `show` and `fork`, the CLI says where the reader is. If it says 
 
 ## The pull request body, when there is one
 
-A reviewer should understand the change before reading the diff, so the diagram goes where they look first: the description, not a trailing comment. Open with one sentence on why the change exists, then the architecture diagram, then whatever proves the change works, such as a screenshot of the result or a recording of the interaction. Use one visual per idea. A diagram that needs a paragraph of explanation has a document problem; go back to step 2.
+A reviewer should understand the change before reading the diff, so the diagram goes where they look first: the description, not a trailing comment. Open with one sentence on why the change exists, then the architecture diagram, then whatever proves the change works, such as a screenshot of the result or a recording of the interaction. Use one visual per idea. A diagram that needs a paragraph of explanation has a document problem; go back to step 2. After the pull request is saved, `python3 scripts/check_pr_images.py --pr <number>` has to print `ok`. A caption with no picture is not a diagram.
 
 ## What makes a document worth reading
 

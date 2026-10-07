@@ -21,6 +21,7 @@ Every pull request carries a PR Lens diagram. Before opening or updating a PR:
 - Write `.pr-lens/graph.json`, validate it, and render it with the light theme.
 - Put the architecture diagram at the top of the PR body. Add a data-flow diagram only when the change has a sequence.
 - Show the diagrams and how they match the plan, and wait for a person before you open or update the PR.
+- After the pull request is saved, run `python3 scripts/check_pr_images.py --pr <number>`. Send the link only after it prints `ok`. The diagram has to be a Markdown image `![caption](url)` whose URL returns an image. A Cursor artifact link, an HTML `<img>`, or a `[caption](url)` link is a failed attach: GitHub shows the caption and not the picture. If `gh pr edit --attach` says `unsupported authentication type`, the token cannot upload; follow the PNG fallback in the PR Lens skill.
 - Do not commit `.pr-lens/`. Corrections go in `.github/pr-lens.yml`.
 
 Load the skill from the folder for the agent you are:
