@@ -914,3 +914,10 @@ html.light [data-sonner-toaster] [data-sonner-toast][data-type="info"] {
     scroll-behavior:           auto   !important;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   MAP TILES — OpenStreetMap basemap inverted to a dark theme (Trip Planner)
+   ════════════════════════════════════════════════════════════════════════════ */
+.osm-dark-tiles {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9) contrast(0.9) saturate(0.7);
+}

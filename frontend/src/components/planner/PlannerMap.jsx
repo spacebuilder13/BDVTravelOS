@@ -9,7 +9,7 @@
  *  • Auto-fits the viewport to the full route on load and whenever
  *    the component list changes
  *  • Shows an unlocated-components count badge at bottom-left
- *  • Dark CartoDB tiles match the application's dark theme
+ *  • OpenStreetMap tiles, inverted to match the application's dark theme
  *
  * Props:
  *   components  – array of trip_component objects (each may have
@@ -251,11 +251,12 @@ export function PlannerMap({ components = [], trip }) {
         scrollWheelZoom
         data-testid="planner-map"
       >
-        {/* Dark CartoDB tiles — matches the app's dark theme */}
+        {/* OpenStreetMap tiles, inverted via .osm-dark-tiles to match the app's dark theme */}
         <TileLayer
-          url={`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key=${process.env.REACT_APP_CARTO_API_KEY}`}
-          attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           maxZoom={19}
+          className="osm-dark-tiles"
         />
 
         {/* Auto-fit to route */}
