@@ -83,7 +83,7 @@ const clean = (v) => {
 const orDash = (v) => (isEmpty(v) ? '-' : clean(v));
 
 const nf0 = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 });
-const nf2 = new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 });
+const nf2 = new Intl.NumberFormat('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const toNum = (v) => {
   if (isEmpty(v)) return null;
@@ -98,11 +98,12 @@ const money = (v, code) => {
   return `${code ? `${clean(code)} ` : ''}${nf0.format(n)}`;
 };
 
-/** Net cost keeps up to 2 decimals (foreign-currency costs). */
+/** Net cost: whole numbers stay whole; fractional ones show 2 decimals (41,000.50). */
 const moneyExact = (v, code) => {
   const n = toNum(v);
   if (n === null) return '-';
-  return `${code ? `${clean(code)} ` : ''}${nf2.format(n)}`;
+  const body = Number.isInteger(n) ? nf0.format(n) : nf2.format(n);
+  return `${code ? `${clean(code)} ` : ''}${body}`;
 };
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -247,9 +248,12 @@ export function buildQuoteSummaryPdf({
   }
 
   components.forEach((c, idx) => {
-    setText(7, 'normal', BLACK);
     const titleCol = cols[0], supCol = cols[1], dateCol = cols[2];
-    const titleLines = wrap(orDash(c.title), titleCol.w - 3);          // -3: swatch bar
+    // Measure the title in the weight it is drawn in (bold is wider), and
+    // leave room for the type colour bar (4mm indent).
+    setText(7, 'bold', BLACK);
+    const titleLines = wrap(orDash(c.title), titleCol.w - 2);
+    setText(7, 'normal', BLACK);
     const typeLabel = isEmpty(c.type) ? '-' : clean(TYPE_LABELS[c.type] || c.type);
     const supLines = [
       ...wrap(orDash(c.supplier_name), supCol.w),
