@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   FileText, X, Loader2, Save, Wand2, Plus, Trash2,
-  ChevronDown, RefreshCw, Copy, CheckCircle2, Percent
+  ChevronDown, RefreshCw, Copy, CheckCircle2, Percent, Download
 } from 'lucide-react';
 import { Sheet, SheetContent } from '../ui/sheet';
 import { Button } from '../ui/button';
@@ -9,6 +9,7 @@ import { Badge } from '../ui/badge';
 import { toast } from 'sonner';
 import { listTaxProfiles, getQuoteTerms, updateQuoteTerms } from '../../services/plannerAPI';
 import { updateTrip } from '../../services/tripAPI';
+import { QuotePdfPreviewDialog } from './QuotePdfPreviewDialog';
 
 const TYPE_LABELS = {
   flight: 'Flight', train: 'Train', bus: 'Bus', ferry: 'Ferry', cruise: 'Cruise',
@@ -101,6 +102,8 @@ export function QuoteDrawer({ open, onClose, trip, components }) {
   const [loadingTax, setLoadingTax]     = useState(false);
   const [savingTerms, setSavingTerms]   = useState(false);
   const [saved, setSaved]               = useState(false);
+  const [buildingPdf, setBuildingPdf]   = useState(false);
+  const [pdfPreview, setPdfPreview]     = useState(null); // { blob, filename } | null
 
   // Init line items from trip components
   useEffect(() => {
@@ -162,6 +165,22 @@ export function QuoteDrawer({ open, onClose, trip, components }) {
       toast.success('Terms saved as template');
     } catch (e) { toast.error('Save failed: ' + e.message); }
     finally { setSavingTerms(false); }
+  };
+
+  // Internal trip summary PDF: built from the drawer's current state (so
+  // on-screen price/discount/terms edits are included), shown in a preview.
+  const handleDownloadPdf = async () => {
+    setBuildingPdf(true);
+    try {
+      const { buildQuoteSummaryPdf, quoteSummaryFilename } = await import('./quoteSummaryPdf');
+      const blob = buildQuoteSummaryPdf({
+        trip, version, components: lineItems, taxProfiles, discount, totals, terms, currency,
+      });
+      setPdfPreview({ blob, filename: quoteSummaryFilename(trip, version) });
+    } catch (e) {
+      console.error('QuoteDrawer pdf', e);
+      toast.error('Could not build PDF: ' + e.message);
+    } finally { setBuildingPdf(false); }
   };
 
   return (
@@ -366,15 +385,34 @@ export function QuoteDrawer({ open, onClose, trip, components }) {
           <p className="text-xs" style={{ color: 'var(--app-muted)' }}>
             {lineItems.length} item{lineItems.length !== 1 ? 's' : ''} · {fmtCurrency(totals.grand, currency)}
           </p>
-          <Button
-            onClick={onClose}
-            className="h-8 px-4 text-xs"
-            style={{ background: 'var(--cta)', color: 'var(--app-bg)' }}
-            data-testid="quote-close-btn"
-          >
-            Done
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleDownloadPdf}
+              disabled={lineItems.length === 0 || loadingTax || buildingPdf}
+              className="h-8 px-3 text-xs"
+              data-testid="quote-download-pdf-btn"
+            >
+              {buildingPdf ? <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" /> : <Download className="w-3.5 h-3.5 mr-1.5" />}
+              Download PDF
+            </Button>
+            <Button
+              onClick={onClose}
+              className="h-8 px-4 text-xs"
+              style={{ background: 'var(--cta)', color: 'var(--app-bg)' }}
+              data-testid="quote-close-btn"
+            >
+              Done
+            </Button>
+          </div>
         </div>
+
+        <QuotePdfPreviewDialog
+          blob={pdfPreview?.blob || null}
+          filename={pdfPreview?.filename || 'Trip-Summary.pdf'}
+          onClose={() => setPdfPreview(null)}
+        />
       </SheetContent>
     </Sheet>
   );
